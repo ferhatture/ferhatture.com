@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="dark" data-lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ferhat Ali Türe — Network & Security Engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<style>
+:root[data-theme="dark"]{
+--bg:#080c10;--bg2:#0d1117;--bg3:#161b22;--bg4:#21262d;
+--border:#30363d;--border2:#484f58;
+--text:#e6edf3;--text2:#8b949e;--text3:#484f58;
+--accent:#58a6ff;--accent2:#3fb950;--accent3:#d29922;
+--accent4:#a371f7;--accent5:#ffa657;--accent6:#f85149;
+--glow:rgba(88,166,255,0.15);
+}
+:root[data-theme="light"]{
+--bg:#f0f4f8;--bg2:#ffffff;--bg3:#f6f8fa;--bg4:#eaeef2;
+--border:#d0d7de;--border2:#afb8c1;
+--text:#1f2328;--text2:#636c76;--text3:#afb8c1;
+--accent:#0969da;--accent2:#1a7f37;--accent3:#9a6700;
+--accent4:#8250df;--accent5:#bc4c00;--accent6:#cf222e;
+--glow:rgba(9,105,218,0.1);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:"Space Mono",monospace;overflow-x:hidden;cursor:none}
+
+/* CUSTOM CURSOR */
+.cursor{position:fixed;width:8px;height:8px;background:var(--accent);border-radius:50%;pointer-events:none;z-index:9999;transition:transform 0.1s;mix-blend-mode:difference}
+.cursor-ring{position:fixed;width:32px;height:32px;border:1px solid var(--accent);border-radius:50%;pointer-events:none;z-index:9998;transition:all 0.15s ease;opacity:0.6}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--accent);border-radius:2px}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;padding:14px 32px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid transparent;transition:all 0.3s;backdrop-filter:blur(0px)}
+nav.scrolled{background:rgba(8,12,16,0.85);border-color:var(--border);backdrop-filter:blur(12px)}
+.nav-logo{font-family:"Syne",sans-serif;font-weight:800;font-size:18px;color:var(--text);text-decoration:none;letter-spacing:-0.5px}
+.nav-logo span{color:var(--accent)}
+.nav-links{display:flex;align-items:center;gap:6px}
+.nav-links a{font-size:11px;color:var(--text2);text-decoration:none;padding:6px 10px;border-radius:6px;transition:all 0.2s;letter-spacing:0.5px}
+.nav-links a:hover{color:var(--accent);background:var(--glow)}
+.nav-controls{display:flex;align-items:center;gap:8px}
+.toggle-btn{background:var(--bg3);border:1px solid var(--border);color:var(--text2);font-size:11px;padding:6px 12px;border-radius:6px;cursor:none;font-family:"Space Mono",monospace;transition:all 0.2s;letter-spacing:0.5px}
+.toggle-btn:hover{border-color:var(--accent);color:var(--accent)}
+.hamburger{display:none;flex-direction:column;gap:4px;background:none;border:none;cursor:none;padding:4px}
+.hamburger span{width:20px;height:1.5px;background:var(--text2);transition:all 0.3s}
+
+/* HERO */
+#hero{position:relative;height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden}
+#three-canvas{position:absolute;top:0;left:0;width:100%;height:100%;z-index:0}
+.hero-content{position:relative;z-index:2;text-align:center;padding:0 20px}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:var(--bg3);border:1px solid var(--border);border-radius:20px;padding:6px 14px;font-size:11px;color:var(--text2);margin-bottom:24px;letter-spacing:0.5px}
+.hero-badge::before{content:"";width:6px;height:6px;background:var(--accent2);border-radius:50%;animation:pulse 2s infinite}
+.hero-name{font-family:"Syne",sans-serif;font-weight:800;font-size:clamp(40px,7vw,88px);line-height:0.95;letter-spacing:-2px;color:var(--text);margin-bottom:16px}
+.hero-name .line2{color:var(--accent);display:block}
+.hero-title{font-size:clamp(12px,1.5vw,15px);color:var(--text2);letter-spacing:2px;margin-bottom:32px;text-transform:uppercase}
+.hero-tags{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:40px}
+.tag{background:var(--bg3);border:1px solid var(--border);color:var(--text2);font-size:10px;padding:4px 10px;border-radius:4px;letter-spacing:0.5px;transition:all 0.2s}
+.tag:hover{border-color:var(--accent);color:var(--accent)}
+.hero-cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn-primary{background:var(--accent);color:#000;font-family:"Space Mono",monospace;font-size:12px;font-weight:700;padding:12px 24px;border-radius:8px;border:none;cursor:none;text-decoration:none;transition:all 0.2s;letter-spacing:0.5px}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 24px var(--glow)}
+.btn-secondary{background:transparent;color:var(--text);font-family:"Space Mono",monospace;font-size:12px;padding:12px 24px;border-radius:8px;border:1px solid var(--border);cursor:none;text-decoration:none;transition:all 0.2s;letter-spacing:0.5px}
+.btn-secondary:hover{border-color:var(--accent);color:var(--accent)}
+.scroll-indicator{position:absolute;bottom:32px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--text3);font-size:10px;letter-spacing:1px}
+.scroll-line{width:1px;height:48px;background:linear-gradient(to bottom,var(--accent),transparent);animation:scrollAnim 2s ease-in-out infinite}
+
+/* SECTIONS */
+section{padding:100px 0;position:relative}
+.container{max-width:1100px;margin:0 auto;padding:0 32px}
+.section-header{margin-bottom:64px}
+.section-num{font-size:11px;color:var(--accent);letter-spacing:2px;margin-bottom:12px;font-family:"Space Mono",monospace}
+.section-title{font-family:"Syne",sans-serif;font-weight:800;font-size:clamp(32px,5vw,56px);letter-spacing:-1.5px;line-height:1;color:var(--text)}
+.section-line{width:48px;height:2px;background:var(--accent);margin-top:16px}
+
+/* REVEAL ANIMATION */
+.reveal{opacity:0;transform:translateY(40px);transition:all 0.7s cubic-bezier(0.16,1,0.3,1)}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.reveal-delay-1{transition-delay:0.1s}
+.reveal-delay-2{transition-delay:0.2s}
+.reveal-delay-3{transition-delay:0.3s}
+.reveal-delay-4{transition-delay:0.4s}
+
+/* ABOUT */
+#about{background:var(--bg)}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
+.about-text p{font-size:14px;line-height:1.9;color:var(--text2);margin-bottom:16px}
+.about-text p strong{color:var(--text)}
+.about-stats{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:32px}
+.stat-card{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:20px;transition:all 0.3s}
+.stat-card:hover{border-color:var(--accent);transform:translateY(-4px)}
+.stat-num{font-family:"Syne",sans-serif;font-size:32px;font-weight:800;color:var(--accent);line-height:1}
+.stat-label{font-size:11px;color:var(--text2);margin-top:4px;letter-spacing:0.5px}
+.terminal-block{background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.terminal-bar{background:var(--bg3);padding:10px 16px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border)}
+.t-dot{width:10px;height:10px;border-radius:50%}
+.terminal-body{padding:20px;font-size:12px;line-height:2}
+.t-line{display:flex;gap:8px;align-items:flex-start}
+.t-prompt{color:var(--accent2);white-space:nowrap}
+.t-cmd{color:var(--accent)}
+.t-out{color:var(--text2);padding-left:20px}
+.t-comment{color:var(--text3)}
+
+/* SKILLS */
+#skills{background:var(--bg2)}
+#d3-graph{width:100%;height:400px;border-radius:12px;background:var(--bg);border:1px solid var(--border);overflow:hidden}
+.skills-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-top:40px}
+.skill-category{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:20px;transition:all 0.3s}
+.skill-category:hover{border-color:var(--border2)}
+.skill-cat-title{font-size:11px;color:var(--accent);letter-spacing:1px;margin-bottom:12px;text-transform:uppercase}
+.skill-tags{display:flex;flex-wrap:wrap;gap:6px}
+.skill-tag{font-size:10px;background:var(--bg3);border:1px solid var(--border);color:var(--text2);padding:3px 8px;border-radius:4px;letter-spacing:0.3px;transition:all 0.2s}
+.skill-tag:hover{border-color:var(--accent);color:var(--accent)}
+
+/* CERTS */
+#certs{background:var(--bg)}
+.certs-timeline{position:relative;padding-left:32px}
+.certs-timeline::before{content:"";position:absolute;left:0;top:0;bottom:0;width:1px;background:linear-gradient(to bottom,var(--accent),transparent)}
+.cert-item{position:relative;margin-bottom:40px;padding:24px;background:var(--bg3);border:1px solid var(--border);border-radius:12px;transition:all 0.3s;cursor:none}
+.cert-item::before{content:"";position:absolute;left:-36px;top:28px;width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 12px var(--accent)}
+.cert-item:hover{border-color:var(--accent);transform:translateX(8px)}
+.cert-header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.cert-name{font-family:"Syne",sans-serif;font-weight:700;font-size:16px;color:var(--text)}
+.cert-badge{font-size:10px;padding:3px 10px;border-radius:20px;font-weight:700;letter-spacing:0.5px;white-space:nowrap}
+.badge-active{background:rgba(63,185,80,0.15);color:var(--accent2);border:1px solid rgba(63,185,80,0.3)}
+.badge-progress{background:rgba(210,153,34,0.15);color:var(--accent3);border:1px solid rgba(210,153,34,0.3)}
+.badge-done{background:rgba(88,166,255,0.15);color:var(--accent);border:1px solid rgba(88,166,255,0.3)}
+.cert-meta{font-size:11px;color:var(--text2);margin-top:8px;display:flex;gap:16px;flex-wrap:wrap}
+.cert-meta span{display:flex;align-items:center;gap:4px}
+
+/* PROJECTS */
+#projects{background:var(--bg2)}
+.projects-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:20px}
+.project-card{background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:28px;transition:all 0.3s;position:relative;overflow:hidden;cursor:none}
+.project-card::after{content:"";position:absolute;inset:0;background:linear-gradient(135deg,var(--glow),transparent);opacity:0;transition:opacity 0.3s;pointer-events:none}
+.project-card:hover{border-color:var(--accent);transform:translateY(-6px)}
+.project-card:hover::after{opacity:1}
+.project-icon{width:44px;height:44px;border-radius:10px;background:var(--bg3);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:16px}
+.project-title{font-family:"Syne",sans-serif;font-weight:700;font-size:18px;color:var(--text);margin-bottom:8px}
+.project-desc{font-size:12px;color:var(--text2);line-height:1.8;margin-bottom:16px}
+.project-tech{display:flex;flex-wrap:wrap;gap:6px}
+.tech-tag{font-size:10px;background:var(--bg3);border:1px solid var(--border);color:var(--text3);padding:2px 8px;border-radius:4px}
+
+/* CV */
+#cv-section{background:var(--bg)}
+.cv-card{background:var(--bg3);border:1px solid var(--border);border-radius:20px;padding:48px;text-align:center;max-width:600px;margin:0 auto}
+.cv-card h3{font-family:"Syne",sans-serif;font-weight:800;font-size:28px;color:var(--text);margin-bottom:12px}
+.cv-card p{font-size:13px;color:var(--text2);margin-bottom:32px;line-height:1.8}
+.cv-buttons{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+.cv-btn{display:flex;align-items:center;gap:8px;padding:14px 28px;border-radius:10px;font-family:"Space Mono",monospace;font-size:12px;font-weight:700;text-decoration:none;transition:all 0.2s;cursor:none;letter-spacing:0.5px}
+.cv-btn-tr{background:var(--accent);color:#000;border:none}
+.cv-btn-tr:hover{transform:translateY(-3px);box-shadow:0 8px 24px var(--glow)}
+.cv-btn-en{background:transparent;color:var(--text);border:1px solid var(--border)}
+.cv-btn-en:hover{border-color:var(--accent);color:var(--accent)}
+
+/* BLOG */
+#blog{background:var(--bg2)}
+.blog-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px}
+.blog-card{background:var(--bg);border:1px solid var(--border);border-radius:16px;overflow:hidden;transition:all 0.3s;cursor:none}
+.blog-card:hover{border-color:var(--border2);transform:translateY(-4px)}
+.blog-img{height:160px;background:linear-gradient(135deg,var(--bg3),var(--bg4));display:flex;align-items:center;justify-content:center;font-size:40px;border-bottom:1px solid var(--border)}
+.blog-body{padding:20px}
+.blog-cat{font-size:10px;color:var(--accent);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px}
+.blog-title{font-family:"Syne",sans-serif;font-weight:700;font-size:16px;color:var(--text);margin-bottom:8px;line-height:1.3}
+.blog-meta{font-size:11px;color:var(--text3)}
+.blog-coming{text-align:center;padding:48px;color:var(--text3);font-size:13px;border:1px dashed var(--border);border-radius:16px}
+
+/* CONTACT */
+#contact{background:var(--bg)}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px}
+.contact-info h3{font-family:"Syne",sans-serif;font-weight:700;font-size:24px;color:var(--text);margin-bottom:16px}
+.contact-info p{font-size:13px;color:var(--text2);line-height:1.8;margin-bottom:32px}
+.contact-links{display:flex;flex-direction:column;gap:12px}
+.contact-link{display:flex;align-items:center;gap:12px;padding:14px 18px;background:var(--bg3);border:1px solid var(--border);border-radius:10px;text-decoration:none;color:var(--text2);font-size:12px;transition:all 0.2s;cursor:none}
+.contact-link:hover{border-color:var(--accent);color:var(--accent);transform:translateX(6px)}
+.contact-link-icon{width:32px;height:32px;border-radius:8px;background:var(--bg4);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.contact-form{display:flex;flex-direction:column;gap:16px}
+.form-group{display:flex;flex-direction:column;gap:6px}
+.form-group label{font-size:11px;color:var(--text2);letter-spacing:0.5px}
+.form-group input,.form-group textarea{background:var(--bg3);border:1px solid var(--border);color:var(--text);font-family:"Space Mono",monospace;font-size:12px;padding:12px 16px;border-radius:8px;outline:none;transition:border-color 0.2s;resize:none}
+.form-group input:focus,.form-group textarea:focus{border-color:var(--accent)}
+.form-group textarea{height:120px}
+.form-submit{background:var(--accent);color:#000;font-family:"Space Mono",monospace;font-size:12px;font-weight:700;padding:14px;border-radius:8px;border:none;cursor:none;transition:all 0.2s;letter-spacing:0.5px}
+.form-submit:hover{transform:translateY(-2px);box-shadow:0 8px 24px var(--glow)}
+
+/* FOOTER */
+footer{background:var(--bg2);border-top:1px solid var(--border);padding:32px;text-align:center;font-size:11px;color:var(--text3)}
+footer span{color:var(--accent)}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.8);backdrop-filter:blur(8px);z-index:2000;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity 0.3s}
+.modal-overlay.active{opacity:1;pointer-events:all}
+.modal{background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:32px;max-width:480px;width:100%;transform:translateY(20px) scale(0.97);transition:all 0.3s;max-height:80vh;overflow-y:auto}
+.modal-overlay.active .modal{transform:translateY(0) scale(1)}
+.modal-close{position:absolute;top:16px;right:16px;background:var(--bg3);border:1px solid var(--border);color:var(--text2);width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:none;font-size:16px;transition:all 0.2s}
+.modal-close:hover{border-color:var(--accent6);color:var(--accent6)}
+
+/* MOBILE MENU */
+.mobile-menu{position:fixed;top:0;right:-100%;width:80%;max-width:300px;height:100vh;background:var(--bg2);border-left:1px solid var(--border);z-index:1500;padding:80px 32px 32px;transition:right 0.3s ease;display:flex;flex-direction:column;gap:8px}
+.mobile-menu.open{right:0}
+.mobile-menu a{color:var(--text2);text-decoration:none;font-size:14px;padding:12px 0;border-bottom:1px solid var(--border);transition:color 0.2s}
+.mobile-menu a:hover{color:var(--accent)}
+.mobile-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:1400;opacity:0;pointer-events:none;transition:opacity 0.3s}
+.mobile-overlay.open{opacity:1;pointer-events:all}
+
+/* ANIMATIONS */
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(0.8)}}
+@keyframes scrollAnim{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform:scaleY(1);transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes typing{from{width:0}to{width:100%}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+nav{padding:12px 20px}
+.nav-links{display:none}
+.hamburger{display:flex}
+.about-grid,.contact-grid{grid-template-columns:1fr;gap:40px}
+.projects-grid,.skills-grid,.blog-grid{grid-template-columns:1fr}
+.container{padding:0 20px}
+section{padding:80px 0}
+.cv-card{padding:32px 20px}
+.hero-name{letter-spacing:-1px}
+}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#hero" class="nav-logo">FAT<span>.</span>DEV</a>
+  <div class="nav-links">
+    <a href="#about" data-tr="Hakkımda" data-en="About">Hakkımda</a>
+    <a href="#skills" data-tr="Beceriler" data-en="Skills">Beceriler</a>
+    <a href="#certs" data-tr="Sertifikalar" data-en="Certs">Sertifikalar</a>
+    <a href="#projects" data-tr="Projeler" data-en="Projects">Projeler</a>
+    <a href="#blog" data-tr="Blog" data-en="Blog">Blog</a>
+    <a href="#contact" data-tr="İletişim" data-en="Contact">İletişim</a>
+  </div>
+  <div class="nav-controls">
+    <button class="toggle-btn" id="langBtn" onclick="toggleLang()">EN</button>
+    <button class="toggle-btn" id="themeBtn" onclick="toggleTheme()">☀</button>
+    <button class="hamburger" id="hamburger" onclick="toggleMobile()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-overlay" id="mobileOverlay" onclick="toggleMobile()"></div>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#about" onclick="toggleMobile()" data-tr="Hakkımda" data-en="About">Hakkımda</a>
+  <a href="#skills" onclick="toggleMobile()" data-tr="Beceriler" data-en="Skills">Beceriler</a>
+  <a href="#certs" onclick="toggleMobile()" data-tr="Sertifikalar" data-en="Certs">Sertifikalar</a>
+  <a href="#projects" onclick="toggleMobile()" data-tr="Projeler" data-en="Projects">Projeler</a>
+  <a href="#blog" onclick="toggleMobile()" data-tr="Blog" data-en="Blog">Blog</a>
+  <a href="#contact" onclick="toggleMobile()" data-tr="İletişim" data-en="Contact">İletişim</a>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <canvas id="three-canvas"></canvas>
+  <div class="hero-content">
+    <div class="hero-badge">
+      <span data-tr="● Açık İşe Alıma — Ağustos 2026" data-en="● Open to opportunities — Aug 2026">● Açık İşe Alıma — Ağustos 2026</span>
+    </div>
+    <h1 class="hero-name">
+      Ferhat Ali<br><span class="line2">Türe</span>
+    </h1>
+    <p class="hero-title" data-tr="Kıdemli Ağ & Güvenlik Mühendisi" data-en="Senior Network & Security Engineer">Kıdemli Ağ & Güvenlik Mühendisi</p>
+    <div class="hero-tags">
+      <span class="tag">CCNA</span>
+      <span class="tag">CCNP ENCOR</span>
+      <span class="tag">NSE4</span>
+      <span class="tag">OSPF / BGP</span>
+      <span class="tag">FortiGate</span>
+      <span class="tag">Python</span>
+      <span class="tag">Docker</span>
+      <span class="tag">Kubernetes</span>
+    </div>
+    <div class="hero-cta">
+      <a href="#about" class="btn-primary" data-tr="Keşfet" data-en="Explore">Keşfet</a>
+      <a href="#contact" class="btn-secondary" data-tr="İletişime Geç" data-en="Get in Touch">İletişime Geç</a>
+    </div>
+  </div>
+  <div class="scroll-indicator">
+    <span data-tr="KAYDIR" data-en="SCROLL">KAYDIR</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-num">01 — <span data-tr="HAKKIMDA" data-en="ABOUT">HAKKIMDA</span></div>
+      <h2 class="section-title" data-tr="Ağı Yöneten<br>İnsan." data-en="The Engineer<br>Behind the Net.">Ağı Yöneten<br>İnsan.</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="about-grid">
+      <div class="about-text reveal reveal-delay-1">
+        <p data-tr="<strong>CCNA, CCNP ENCOR ve Fortinet NSE4</strong> sertifikalarına sahip Ağ ve Güvenlik Mühendisiyim. Türk Silahlı Kuvvetleri'nde 3.500 personellik kritik ağ altyapısını yönettim." data-en="I'm a Network and Security Engineer holding active <strong>CCNA, CCNP ENCOR, and Fortinet NSE4</strong> certifications. I managed mission-critical network infrastructure serving 3,500 personnel within the Turkish Armed Forces.">
+          <strong>CCNA, CCNP ENCOR ve Fortinet NSE4</strong> sertifikalarına sahip Ağ ve Güvenlik Mühendisiyim. Türk Silahlı Kuvvetleri'nde 3.500 personellik kritik ağ altyapısını yönettim.
+        </p>
+        <p data-tr="Layer-2/Layer-3 ve kablosuz ağ tasarımı, OSPF/BGP yönlendirme ve FortiGate tabanlı ağ güvenliği konularında saha deneyimim bulunmaktadır." data-en="Experienced in Layer-2/Layer-3 and wireless network design, OSPF/BGP routing, and FortiGate-based network security — validated through real-world field operations.">
+          Layer-2/Layer-3 ve kablosuz ağ tasarımı, OSPF/BGP yönlendirme ve FortiGate tabanlı ağ güvenliği konularında saha deneyimim bulunmaktadır.
+        </p>
+        <p data-tr="CCNP ENARSI sınavına hazırlanıyor; Python ile ağ otomasyonu ve konteyner teknolojileri (Docker/Kubernetes) alanlarında bilgimi geliştiriyorum." data-en="Currently preparing for CCNP ENARSI while expanding skills in network automation (Python) and container technologies (Docker/Kubernetes).">
+          CCNP ENARSI sınavına hazırlanıyor; Python ile ağ otomasyonu ve konteyner teknolojileri (Docker/Kubernetes) alanlarında bilgimi geliştiriyorum.
+        </p>
+        <div class="about-stats">
+          <div class="stat-card reveal reveal-delay-2">
+            <div class="stat-num">3.5K</div>
+            <div class="stat-label" data-tr="Yönetilen Personel" data-en="Personnel Managed">Yönetilen Personel</div>
+          </div>
+          <div class="stat-card reveal reveal-delay-3">
+            <div class="stat-num">99.9%</div>
+            <div class="stat-label" data-tr="Sistem Uptime" data-en="System Uptime">Sistem Uptime</div>
+          </div>
+          <div class="stat-card reveal reveal-delay-2">
+            <div class="stat-num">4+</div>
+            <div class="stat-label" data-tr="Yıl Deneyim" data-en="Years Experience">Yıl Deneyim</div>
+          </div>
+          <div class="stat-card reveal reveal-delay-3">
+            <div class="stat-num">5</div>
+            <div class="stat-label" data-tr="Aktif Sertifika" data-en="Active Certs">Aktif Sertifika</div>
+          </div>
+        </div>
+      </div>
+      <div class="terminal-block reveal reveal-delay-2">
+        <div class="terminal-bar">
+          <div class="t-dot" style="background:#ff5f57"></div>
+          <div class="t-dot" style="background:#febc2e"></div>
+          <div class="t-dot" style="background:#28c840"></div>
+          <span style="font-size:11px;color:var(--text3);margin-left:8px">ferhat@core:~$</span>
+        </div>
+        <div class="terminal-body">
+          <div class="t-line"><span class="t-prompt">❯</span><span class="t-cmd">whoami</span></div>
+          <div class="t-line"><span class="t-out" data-tr="ferhat.ali.ture — Ağ & Güvenlik Mühendisi" data-en="ferhat.ali.ture — Network & Security Engineer">ferhat.ali.ture — Ağ & Güvenlik Mühendisi</span></div>
+          <div class="t-line" style="margin-top:8px"><span class="t-prompt">❯</span><span class="t-cmd">cat location.txt</span></div>
+          <div class="t-line"><span class="t-out">Ankara, Turkey 🇹🇷</span></div>
+          <div class="t-line" style="margin-top:8px"><span class="t-prompt">❯</span><span class="t-cmd">show version</span></div>
+          <div class="t-line"><span class="t-out t-comment"># CCNA · CCNP ENCOR · NSE4</span></div>
+          <div class="t-line"><span class="t-out t-comment"># RCNA · RSE</span></div>
+          <div class="t-line" style="margin-top:8px"><span class="t-prompt">❯</span><span class="t-cmd">ping career.next</span></div>
+          <div class="t-line"><span class="t-out" style="color:var(--accent2)" data-tr="CCNP ENARSI → CCIE Enterprise 🎯" data-en="CCNP ENARSI → CCIE Enterprise 🎯">CCNP ENARSI → CCIE Enterprise 🎯</span></div>
+          <div class="t-line" style="margin-top:8px"><span class="t-prompt" style="animation:blink 1s infinite">▊</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-num">02 — <span data-tr="TEKNİK BECERİLER" data-en="TECHNICAL SKILLS">TEKNİK BECERİLER</span></div>
+      <h2 class="section-title" data-tr="Stack &<br>Yetkinlikler." data-en="Stack &<br>Expertise.">Stack &<br>Yetkinlikler.</h2>
+      <div class="section-line"></div>
+    </div>
+    <div id="d3-graph" class="reveal"></div>
+    <div class="skills-grid" style="margin-top:32px">
+      <div class="skill-category reveal reveal-delay-1">
+        <div class="skill-cat-title" data-tr="Ağ Protokolleri" data-en="Network Protocols">Ağ Protokolleri</div>
+        <div class="skill-tags">
+          <span class="skill-tag">TCP/IP</span><span class="skill-tag">OSPF</span><span class="skill-tag">BGP</span>
+          <span class="skill-tag">IS-IS</span><span class="skill-tag">EIGRP</span><span class="skill-tag">VLAN</span>
+          <span class="skill-tag">STP</span><span class="skill-tag">MPLS</span><span class="skill-tag">VXLAN</span>
+          <span class="skill-tag">QoS</span><span class="skill-tag">HSRP/VRRP</span><span class="skill-tag">NAT</span>
+          <span class="skill-tag">IPv6</span><span class="skill-tag">PBR</span><span class="skill-tag">IEEE 802.1x</span>
+        </div>
+      </div>
+      <div class="skill-category reveal reveal-delay-2">
+        <div class="skill-cat-title" data-tr="Güvenlik" data-en="Security">Güvenlik</div>
+        <div class="skill-tags">
+          <span class="skill-tag">FortiGate NSE4</span><span class="skill-tag">Firewall</span>
+          <span class="skill-tag">ACL</span><span class="skill-tag">IPS/IDS</span><span class="skill-tag">WAF</span>
+          <span class="skill-tag">IPsec VPN</span><span class="skill-tag">SSL-VPN</span>
+          <span class="skill-tag">DMVPN</span><span class="skill-tag">RADIUS</span>
+          <span class="skill-tag">Hardening</span><span class="skill-tag">GRE Tunnel</span>
+        </div>
+      </div>
+      <div class="skill-category reveal reveal-delay-3">
+        <div class="skill-cat-title" data-tr="DevOps & Otomasyon" data-en="DevOps & Automation">DevOps & Otomasyon</div>
+        <div class="skill-tags">
+          <span class="skill-tag">Docker</span><span class="skill-tag">Kubernetes</span>
+          <span class="skill-tag">Python</span><span class="skill-tag">Netmiko</span>
+          <span class="skill-tag">Napalm</span><span class="skill-tag">Ansible</span>
+          <span class="skill-tag">PowerShell</span><span class="skill-tag">Bash</span>
+          <span class="skill-tag">Grafana</span><span class="skill-tag">Zabbix</span>
+          <span class="skill-tag">PRTG</span><span class="skill-tag">Cloudflare</span>
+        </div>
+      </div>
+      <div class="skill-category reveal reveal-delay-4">
+        <div class="skill-cat-title" data-tr="Sistem & Donanım" data-en="Systems & Hardware">Sistem & Donanım</div>
+        <div class="skill-tags">
+          <span class="skill-tag">Active Directory</span><span class="skill-tag">WSUS</span>
+          <span class="skill-tag">Exchange Server</span><span class="skill-tag">Linux</span>
+          <span class="skill-tag">Cisco</span><span class="skill-tag">Ruijie</span>
+          <span class="skill-tag">Veeam</span><span class="skill-tag">SD-WAN</span>
+          <span class="skill-tag">EVE-NG</span><span class="skill-tag">Mailcow</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CERTS -->
+<section id="certs">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-num">03 — <span data-tr="SERTİFİKALAR" data-en="CERTIFICATIONS">SERTİFİKALAR</span></div>
+      <h2 class="section-title" data-tr="Kanıtlanmış<br>Yetkinlik." data-en="Proven<br>Expertise.">Kanıtlanmış<br>Yetkinlik.</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="certs-timeline">
+      <div class="cert-item reveal" onclick="openModal('ccnp')">
+        <div class="cert-header">
+          <div class="cert-name">Cisco CCNP ENCOR</div>
+          <span class="cert-badge badge-active" data-tr="✓ Aktif" data-en="✓ Active">✓ Aktif</span>
+        </div>
+        <div class="cert-meta">
+          <span data-tr="📅 23.02.2026" data-en="📅 23.02.2026">📅 23.02.2026</span>
+          <span>Cisco Systems</span>
+          <span data-tr="🔗 Credly" data-en="🔗 Credly">🔗 Credly</span>
+        </div>
+      </div>
+      <div class="cert-item reveal reveal-delay-1" onclick="openModal('ccna')">
+        <div class="cert-header">
+          <div class="cert-name">Cisco CCNA</div>
+          <span class="cert-badge badge-active" data-tr="✓ Aktif" data-en="✓ Active">✓ Aktif</span>
+        </div>
+        <div class="cert-meta">
+          <span>📅 09.12.2025</span>
+          <span>Cisco Systems</span>
+          <span data-tr="🔗 Credly" data-en="🔗 Credly">🔗 Credly</span>
+        </div>
+      </div>
+      <div class="cert-item reveal reveal-delay-2" onclick="openModal('nse4')">
+        <div class="cert-header">
+          <div class="cert-name">Fortinet NSE4 — FortiGate 7.6</div>
+          <span class="cert-badge badge-active" data-tr="✓ Aktif" data-en="✓ Active">✓ Aktif</span>
+        </div>
+        <div class="cert-meta">
+          <span>📅 17.12.2025</span>
+          <span>Fortinet</span>
+          <span data-tr="🔗 Credly" data-en="🔗 Credly">🔗 Credly</span>
+        </div>
+      </div>
+      <div class="cert-item reveal reveal-delay-3" onclick="openModal('rcna')">
+        <div class="cert-header">
+          <div class="cert-name">Ruijie RCNA</div>
+          <span class="cert-badge badge-active" data-tr="✓ Aktif" data-en="✓ Active">✓ Aktif</span>
+        </div>
+        <div class="cert-meta">
+          <span>📅 02.04.2025</span>
+          <span>Ruijie Networks</span>
+        </div>
+      </div>
+      <div class="cert-item reveal reveal-delay-4" onclick="openModal('rse')">
+        <div class="cert-header">
+          <div class="cert-name">Ruijie RSE</div>
+          <span class="cert-badge badge-active" data-tr="✓ Aktif" data-en="✓ Active">✓ Aktif</span>
+        </div>
+        <div class="cert-meta">
+          <span>📅 27.03.2025</span>
+          <span>Ruijie Networks</span>
+        </div>
+      </div>
+      <div class="cert-item reveal">
+        <div class="cert-header">
+          <div class="cert-name">CCNP ENARSI</div>
+          <span class="cert-badge badge-progress" data-tr="⏳ Hazırlık" data-en="⏳ In Progress">⏳ Hazırlık</span>
+        </div>
+        <div class="cert-meta">
+          <span data-tr="🎯 Hedef: 2025" data-en="🎯 Target: 2025">🎯 Hedef: 2025</span>
+          <span>Cisco Systems</span>
+        </div>
+      </div>
+      <div class="cert-item reveal reveal-delay-1">
+        <div class="cert-header">
+          <div class="cert-name">Docker & Kubernetes</div>
+          <span class="cert-badge badge-done" data-tr="✓ Tamamlandı" data-en="✓ Completed">✓ Tamamlandı</span>
+        </div>
+        <div class="cert-meta">
+          <span data-tr="📅 2025" data-en="📅 2025">📅 2025</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-num">04 — <span data-tr="PROJELER" data-en="PROJECTS">PROJELER</span></div>
+      <h2 class="section-title" data-tr="Lab &<br>Gerçek Dünya." data-en="Lab &<br>Real World.">Lab &<br>Gerçek Dünya.</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="projects-grid">
+      <div class="project-card reveal" onclick="openModal('greenfield')">
+        <div class="project-icon">🏗️</div>
+        <div class="project-title" data-tr="Sıfırdan Ağ Tasarımı" data-en="Greenfield Network Design">Sıfırdan Ağ Tasarımı</div>
+        <div class="project-desc" data-tr="Yeni üs bölgelerinde kablolu/kablosuz ağ topolojisini sıfırdan tasarladım. Maliyet/performans analizi ile donanım seçimi, kurulum ve saha doğrulama." data-en="Designed wired/wireless network topology from scratch for newly established base locations. Hardware selection based on cost/performance trade-offs, full installation and field validation.">
+          Yeni üs bölgelerinde kablolu/kablosuz ağ topolojisini sıfırdan tasarladım. Maliyet/performans analizi ile donanım seçimi, kurulum ve saha doğrulama.
+        </div>
+        <div class="project-tech">
+          <span class="tech-tag">Cisco</span><span class="tech-tag">Ruijie</span>
+          <span class="tech-tag">FortiGate</span><span class="tech-tag">WLC/AP</span>
+        </div>
+      </div>
+      <div class="project-card reveal reveal-delay-1" onclick="openModal('eveng')">
+        <div class="project-icon">🖥️</div>
+        <div class="project-title" data-tr="Kurumsal Kampüs Simülasyonu" data-en="Enterprise Campus Simulation">Kurumsal Kampüs Simülasyonu</div>
+        <div class="project-desc" data-tr="EVE-NG üzerinde çok departmanlı kampüs ağı. OSPF, VLAN/VTP, EtherChannel, STP, DHCP, IEEE 802.1x ve FortiGate entegrasyonu." data-en="Multi-department campus network on EVE-NG. OSPF, VLAN/VTP, EtherChannel, STP, DHCP, IEEE 802.1x and FortiGate integration.">
+          EVE-NG üzerinde çok departmanlı kampüs ağı. OSPF, VLAN/VTP, EtherChannel, STP, DHCP, IEEE 802.1x ve FortiGate entegrasyonu.
+        </div>
+        <div class="project-tech">
+          <span class="tech-tag">EVE-NG</span><span class="tech-tag">OSPF</span>
+          <span class="tech-tag">BGP</span><span class="tech-tag">FortiGate</span>
+        </div>
+      </div>
+      <div class="project-card reveal reveal-delay-2" onclick="openModal('k8s')">
+        <div class="project-icon">☸️</div>
+        <div class="project-title" data-tr="Self-Hosted K8s Cluster" data-en="Self-Hosted K8s Cluster">Self-Hosted K8s Cluster</div>
+        <div class="project-desc" data-tr="Yerel makinelerimde Kubernetes cluster kurdum. Kendi web sitemi, mail sunucumu (Mailcow) ve uygulamalarımı containerize ederek deploy ettim." data-en="Built a Kubernetes cluster on local machines. Deployed my own website, mail server (Mailcow) and applications as containerized workloads.">
+          Yerel makinelerimde Kubernetes cluster kurdum. Kendi web sitemi, mail sunucumu (Mailcow) ve uygulamalarımı containerize ederek deploy ettim.
+        </div>
+        <div class="project-tech">
+          <span class="tech-tag">Kubernetes</span><span class="tech-tag">Docker</span>
+          <span class="tech-tag">Mailcow</span><span class="tech-tag">Cloudflare</span>
+        </div>
+      </div>
+      <div class="project-card reveal reveal-delay-3" onclick="openModal('automation')">
+        <div class="project-icon">🐍</div>
+        <div class="project-title" data-tr="Ağ Otomasyon Scriptleri" data-en="Network Automation Scripts">Ağ Otomasyon Scriptleri</div>
+        <div class="project-desc" data-tr="Python (Netmiko/Napalm) ile manuel konfigürasyon hatalarını minimize eden otomasyon çözümleri. Ağ programlanabilirliği senaryoları." data-en="Python (Netmiko/Napalm) automation solutions to minimize manual configuration errors. Network programmability scenarios.">
+          Python (Netmiko/Napalm) ile manuel konfigürasyon hatalarını minimize eden otomasyon çözümleri. Ağ programlanabilirliği senaryoları.
+        </div>
+        <div class="project-tech">
+          <span class="tech-tag">Python</span><span class="tech-tag">Netmiko</span>
+          <span class="tech-tag">Napalm</span><span class="tech-tag">Ansible</span>
+        </div>
+      </div>
+      <div class="project-card reveal reveal-delay-4" onclick="openModal('localai')">
+        <div class="project-icon">🤖</div>
+        <div class="project-title" data-tr="Local AI & Geliştirme Ortamı" data-en="Local AI & Dev Environment">Local AI & Geliştirme Ortamı</div>
+        <div class="project-desc" data-tr="Gizlilik odaklı yerel LLM'ler çalıştırıyor, Cursor/VSCode ile yapay zeka destekli geliştirme ortamı kurdum. AdGuard DNS ve Cloudflare Tunnels ile ağ optimizasyonu." data-en="Running privacy-focused local LLMs. AI-assisted development environment with Cursor/VSCode. Network optimization with AdGuard DNS and Cloudflare Tunnels.">
+          Gizlilik odaklı yerel LLM'ler çalıştırıyor, Cursor/VSCode ile yapay zeka destekli geliştirme ortamı.
+        </div>
+        <div class="project-tech">
+          <span class="tech-tag">Local LLM</span><span class="tech-tag">Cursor</span>
+          <span class="tech-tag">AdGuard</span><span class="tech-tag">Cloudflare</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CV -->
+<section id="cv-section">
+  <div class="container">
+    <div class="section-header reveal" style="text-align:center">
+      <div class="section-num" style="text-align:center">05 — <span data-tr="CV" data-en="RESUME">CV</span></div>
+      <h2 class="section-title" style="text-align:center" data-tr="CV İndir." data-en="Download Resume.">CV İndir.</h2>
+      <div class="section-line" style="margin:16px auto 0"></div>
+    </div>
+    <div class="cv-card reveal reveal-delay-1">
+      <h3 data-tr="Özgeçmişim" data-en="My Resume">Özgeçmişim</h3>
+      <p data-tr="Güncel CV'me aşağıdaki linklerden ulaşabilirsiniz. Türkçe ve İngilizce versiyonlar mevcuttur." data-en="You can access my latest resume via the links below. Both Turkish and English versions are available.">
+        Güncel CV'me aşağıdaki linklerden ulaşabilirsiniz. Türkçe ve İngilizce versiyonlar mevcuttur.
+      </p>
+      <div class="cv-buttons">
+        <a href="Ferhat-Ali-Ture-CV-Turkce.pdf" class="cv-btn cv-btn-tr" download>
+          🇹🇷 <span data-tr="Türkçe İndir" data-en="Download TR">Türkçe İndir</span>
+        </a>
+        <a href="Ferhat-Ali-Ture-CV-English.pdf" class="cv-btn cv-btn-en" download>
+          🇬🇧 <span data-tr="İngilizce İndir" data-en="Download EN">İngilizce İndir</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BLOG -->
+<section id="blog">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-num">06 — <span data-tr="BLOG" data-en="BLOG">BLOG</span></div>
+      <h2 class="section-title" data-tr="Yazılar &<br>Notlar." data-en="Articles &<br>Notes.">Yazılar &<br>Notlar.</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="blog-coming reveal">
+      <div style="font-size:48px;margin-bottom:16px">📡</div>
+      <p data-tr="Blog yazıları yakında yayına girecek. Ağ mühendisliği, sertifika deneyimleri ve lab notları üzerine yazılar geliyor." data-en="Blog posts coming soon. Articles on network engineering, certification experiences, and lab notes are on the way.">
+        Blog yazıları yakında yayına girecek. Ağ mühendisliği, sertifika deneyimleri ve lab notları üzerine yazılar geliyor.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-num">07 — <span data-tr="İLETİŞİM" data-en="CONTACT">İLETİŞİM</span></div>
+      <h2 class="section-title" data-tr="Bağlanalım." data-en="Let's Connect.">Bağlanalım.</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="contact-grid">
+      <div class="contact-info reveal">
+        <h3 data-tr="Merhaba 👋" data-en="Hello 👋">Merhaba 👋</h3>
+        <p data-tr="İş fırsatları, teknik sorular veya sadece merhaba demek için ulaşabilirsiniz. En geç 24 saat içinde dönüş yaparım." data-en="Feel free to reach out for job opportunities, technical questions, or just to say hello. I usually reply within 24 hours.">
+          İş fırsatları, teknik sorular veya sadece merhaba demek için ulaşabilirsiniz.
+        </p>
+        <div class="contact-links">
+          <a href="mailto:ferhatature@gmail.com" class="contact-link">
+            <div class="contact-link-icon">✉️</div>
+            <span>ferhatature@gmail.com</span>
+          </a>
+          <a href="https://linkedin.com/in/ferhatature" target="_blank" class="contact-link">
+            <div class="contact-link-icon">💼</div>
+            <span>linkedin.com/in/ferhatature</span>
+          </a>
+          <a href="https://github.com/ferhatature" target="_blank" class="contact-link">
+            <div class="contact-link-icon">🐙</div>
+            <span>github.com/ferhatature</span>
+          </a>
+          <div class="contact-link">
+            <div class="contact-link-icon">📍</div>
+            <span>Ankara, Türkiye</span>
+          </div>
+        </div>
+      </div>
+      <div class="contact-form reveal reveal-delay-2">
+        <div class="form-group">
+          <label data-tr="İSİM" data-en="NAME">İSİM</label>
+          <input type="text" placeholder="John Doe">
+        </div>
+        <div class="form-group">
+          <label data-tr="E-POSTA" data-en="EMAIL">E-POSTA</label>
+          <input type="email" placeholder="john@example.com">
+        </div>
+        <div class="form-group">
+          <label data-tr="MESAJ" data-en="MESSAGE">MESAJ</label>
+          <textarea placeholder="..."></textarea>
+        </div>
+        <button class="form-submit" data-tr="GÖNDER →" data-en="SEND →">GÖNDER →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p data-tr="© 2025 Ferhat Ali Türe — <span>ferhatature.dev</span> — Tüm hakları saklıdır." data-en="© 2025 Ferhat Ali Türe — <span>ferhatature.dev</span> — All rights reserved.">
+    © 2025 Ferhat Ali Türe — <span>ferhatature.dev</span> — Tüm hakları saklıdır.
+  </p>
+</footer>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal" id="modalContent" style="position:relative">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<script>
+/* ─── CURSOR ─── */
+const cur=document.getElementById("cursor"),ring=document.getElementById("cursorRing");
+document.addEventListener("mousemove",e=>{
+  cur.style.left=e.clientX-4+"px";cur.style.top=e.clientY-4+"px";
+  ring.style.left=e.clientX-16+"px";ring.style.top=e.clientY-16+"px";
+});
+document.addEventListener("mousedown",()=>{ring.style.transform="scale(0.7)"});
+document.addEventListener("mouseup",()=>{ring.style.transform="scale(1)"});
+
+/* ─── NAV SCROLL ─── */
+window.addEventListener("scroll",()=>{
+  document.getElementById("navbar").classList.toggle("scrolled",scrollY>60);
+});
+
+/* ─── MOBILE MENU ─── */
+function toggleMobile(){
+  document.getElementById("mobileMenu").classList.toggle("open");
+  document.getElementById("mobileOverlay").classList.toggle("open");
+}
+
+/* ─── LANG TOGGLE ─── */
+let lang="tr";
+function toggleLang(){
+  lang=lang==="tr"?"en":"tr";
+  document.documentElement.setAttribute("data-lang",lang);
+  document.getElementById("langBtn").textContent=lang==="tr"?"EN":"TR";
+  document.querySelectorAll("[data-tr]").forEach(el=>{
+    const val=el.getAttribute("data-"+lang);
+    if(val) el.innerHTML=val;
+  });
+}
+
+/* ─── THEME TOGGLE ─── */
+let theme="dark";
+function toggleTheme(){
+  theme=theme==="dark"?"light":"dark";
+  document.documentElement.setAttribute("data-theme",theme);
+  document.getElementById("themeBtn").textContent=theme==="dark"?"☀":"🌙";
+}
+
+/* ─── SCROLL REVEAL ─── */
+const observer=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add("visible")});
+},{threshold:0.1});
+document.querySelectorAll(".reveal").forEach(el=>observer.observe(el));
+
+/* ─── MODAL DATA ─── */
+const modals={
+  ccnp:{tr:{t:"Cisco CCNP ENCOR",b:"Enterprise Core sınavını geçerek CCNP yolculuğumun ilk adımını tamamladım. SD-WAN, QoS, ağ güvenliği ve otomasyon konularını kapsayan bu sertifika, kurumsal ağ tasarımındaki yetkinliğimi kanıtlamaktadır.<br><br><strong>Tarih:</strong> 23.02.2026<br><strong>Doğrulama:</strong> Credly"},en:{t:"Cisco CCNP ENCOR",b:"Completed the first step of my CCNP journey by passing the Enterprise Core exam. This certification covers SD-WAN, QoS, network security, and automation, proving my competency in enterprise network design.<br><br><strong>Date:</strong> 23.02.2026<br><strong>Verify:</strong> Credly"}},
+  ccna:{tr:{t:"Cisco CCNA",b:"Ağ mühendisliğinin temel taşı olan CCNA sertifikasını başarıyla tamamladım. Routing, switching, ve ağ güvenliği konularında sağlam bir temel oluştururken saha tecrübemle pekiştirdim.<br><br><strong>Tarih:</strong> 09.12.2025"},en:{t:"Cisco CCNA",b:"Successfully completed the CCNA certification, the cornerstone of network engineering. Built a strong foundation in routing, switching, and network security, reinforced by real-world field experience.<br><br><strong>Date:</strong> 09.12.2025"}},
+  nse4:{tr:{t:"Fortinet NSE4",b:"FortiGate 7.6 üzerinde güvenlik duvarı politikaları, IPS, SSL-VPN ve WAF yapılandırmalarını kapsayan NSE4 sertifikasını tamamladım. Gerçek ortamda FortiGate yönetimi konusunda kapsamlı deneyimim var.<br><br><strong>Tarih:</strong> 17.12.2025"},en:{t:"Fortinet NSE4",b:"Completed NSE4 covering firewall policies, IPS, SSL-VPN, and WAF configuration on FortiGate 7.6. Extensive hands-on experience managing FortiGate in real production environments.<br><br><strong>Date:</strong> 17.12.2025"}},
+  rcna:{tr:{t:"Ruijie RCNA",b:"Ruijie ekipmanları üzerinde ağ konfigürasyonu ve yönetimi konusundaki yetkinliğimi belgeleyen RCNA sertifikası.<br><br><strong>Tarih:</strong> 02.04.2025"},en:{t:"Ruijie RCNA",b:"RCNA certification documenting competency in network configuration and management on Ruijie equipment.<br><br><strong>Date:</strong> 02.04.2025"}},
+  rse:{tr:{t:"Ruijie RSE",b:"Kurumsal ağlarda Ruijie çözümlerini uygulama ve yönetme konusundaki ileri düzey yetkinliği belgeleyen RSE sertifikası.<br><br><strong>Tarih:</strong> 27.03.2025"},en:{t:"Ruijie RSE",b:"RSE certification documenting advanced competency in implementing and managing Ruijie solutions in enterprise networks.<br><br><strong>Date:</strong> 27.03.2025"}},
+  greenfield:{tr:{t:"Sıfırdan Ağ Altyapısı Tasarımı",b:"Yeni açılan üs bölgelerinde operasyonel ihtiyaçlar doğrultusunda gereksinim analizi yaparak kablolu ve kablosuz ağ topolojisini sıfırdan tasarladım.<br><br>Sistemin gelecekteki büyüme kapasitesini planlayarak maliyet/performans odaklı trade-off analizleri ile donanım ürün seçimini gerçekleştirdim. Omurga ve kenar cihazların ilk kurulum, konfigürasyon ve saha doğrulama süreçlerini eksiksiz teslim ettim.<br><br><strong>Teknolojiler:</strong> Cisco, Ruijie, FortiGate, WLC/AP, Kablolu/Kablosuz"},en:{t:"Greenfield Network Infrastructure Design",b:"Conducted requirements analysis based on operational needs for newly established base locations, designing wired/wireless network topology and system architecture from scratch.<br><br>Planned future scalability and performed cost/performance trade-off analyses for hardware selection. Managed initial setup, configuration, and field validation of core and edge devices.<br><br><strong>Technologies:</strong> Cisco, Ruijie, FortiGate, WLC/AP, Wired/Wireless"}},
+  eveng:{tr:{t:"Kurumsal Kampüs Ağ Simülasyonu",b:"EVE-NG üzerinde çok departmanlı bir üniversite kampüsünün uçtan uca ağ altyapısını simüle ettim.<br><br>• OSPF dinamik yönlendirme<br>• VLAN/VTP/Router-on-a-Stick segmentasyon<br>• EtherChannel (LACP/PAgP) ve STP optimizasyonu<br>• DHCP, WLC/AP kablosuz yönetimi<br>• Port Security ve IEEE 802.1x<br>• FortiGate NGFW entegrasyonu"},en:{t:"Enterprise Campus Network Simulation",b:"Simulated end-to-end network infrastructure for a multi-department university campus on EVE-NG.<br><br>• OSPF dynamic routing<br>• VLAN/VTP/Router-on-a-Stick segmentation<br>• EtherChannel (LACP/PAgP) and STP optimization<br>• DHCP, WLC/AP wireless management<br>• Port Security and IEEE 802.1x<br>• FortiGate NGFW integration"}},
+  k8s:{tr:{t:"Self-Hosted K8s Cluster",b:"Yerel makinelerim üzerinde Kubernetes cluster kurarak kendi internet sayfamı, Mailcow mail sunucumu ve uygulamalarımı deploy ettim.<br><br>Cloudflare Tunnels ile port açmadan güvenli dış erişim sağladım. AdGuard DNS ile ağ genelinde reklam engelleme kurguladım.<br><br><strong>Stack:</strong> Kubernetes, Docker, Mailcow, Cloudflare Tunnels, AdGuard"},en:{t:"Self-Hosted K8s Cluster",b:"Built a Kubernetes cluster on local machines and deployed my own website, Mailcow mail server, and applications.<br><br>Set up secure external access without port forwarding via Cloudflare Tunnels. Configured network-wide ad blocking with AdGuard DNS.<br><br><strong>Stack:</strong> Kubernetes, Docker, Mailcow, Cloudflare Tunnels, AdGuard"}},
+  automation:{tr:{t:"Ağ Otomasyon Scriptleri",b:"Manuel konfigürasyon hatalarını minimize etmek ve operasyonel verimliliği artırmak amacıyla Python tabanlı otomasyon çözümleri geliştiriyorum.<br><br>• Netmiko ile çoklu cihaz konfigürasyonu<br>• Napalm ile yapılandırma doğrulama<br>• Toplu firmware güncelleme scriptleri<br>• Ağ durumu raporlama otomasyonu<br><br><strong>Araçlar:</strong> Python, Netmiko, Napalm, Ansible"},en:{t:"Network Automation Scripts",b:"Developing Python-based automation solutions to minimize manual configuration errors and improve operational efficiency.<br><br>• Multi-device configuration with Netmiko<br>• Configuration validation with Napalm<br>• Bulk firmware update scripts<br>• Network status reporting automation<br><br><strong>Tools:</strong> Python, Netmiko, Napalm, Ansible"}},
+  localai:{tr:{t:"Local AI & Geliştirme Ortamı",b:"Gizlilik odaklı yapay zeka kullanımı için yerel LLM'ler çalıştırıyorum. Cursor ve VSCode ile yapay zeka destekli modern geliştirme ortamı kurdum.<br><br>• AdGuard DNS ile ağ genelinde reklam engelleme<br>• Cloudflare Tunnels ile güvenli dış erişim<br>• Hızlı web geliştirme için Cursor/VSCode<br><br><strong>Araçlar:</strong> Local LLM, Cursor, VSCode, AdGuard, Cloudflare"},en:{t:"Local AI & Dev Environment",b:"Running local LLMs for privacy-focused AI assistance. Set up a modern AI-assisted development environment with Cursor and VSCode.<br><br>• Network-wide ad blocking with AdGuard DNS<br>• Secure external access via Cloudflare Tunnels<br>• Rapid web development with Cursor/VSCode<br><br><strong>Tools:</strong> Local LLM, Cursor, VSCode, AdGuard, Cloudflare"}}
+};
+
+function openModal(key){
+  const d=modals[key];if(!d)return;
+  const m=d[lang]||d.tr;
+  document.getElementById("modalBody").innerHTML=`<h3 style="font-family:Syne,sans-serif;font-size:22px;margin-bottom:16px;color:var(--text)">${m.t}</h3><div style="font-size:13px;color:var(--text2);line-height:1.9">${m.b}</div>`;
+  document.getElementById("modalOverlay").classList.add("active");
+}
+function closeModal(e){
+  if(!e||e.target===document.getElementById("modalOverlay"))
+    document.getElementById("modalOverlay").classList.remove("active");
+}
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeModal()});
+
+/* ─── THREE.JS 3D NETWORK ─── */
+(function(){
+  const canvas=document.getElementById("three-canvas");
+  const renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:true});
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+  const scene=new THREE.Scene();
+  const camera=new THREE.PerspectiveCamera(60,window.innerWidth/window.innerHeight,0.1,1000);
+  camera.position.set(0,0,28);
+
+  function resize(){
+    renderer.setSize(window.innerWidth,window.innerHeight);
+    camera.aspect=window.innerWidth/window.innerHeight;
+    camera.updateProjectionMatrix();
+  }
+  resize();
+  window.addEventListener("resize",resize);
+
+  const nodes=[];
+  const nodeCount=42;
+  const nodeGeo=new THREE.SphereGeometry(0.18,8,8);
+
+  for(let i=0;i<nodeCount;i++){
+    const isDark=document.documentElement.getAttribute("data-theme")!=="light";
+    const colors=[0x58a6ff,0x3fb950,0xa371f7,0xd29922,0xffa657];
+    const mat=new THREE.MeshBasicMaterial({color:colors[Math.floor(Math.random()*colors.length)],transparent:true,opacity:0.85});
+    const mesh=new THREE.Mesh(nodeGeo,mat);
+    const phi=Math.acos(-1+2*i/nodeCount);
+    const theta=Math.sqrt(nodeCount*Math.PI)*phi;
+    const r=12+Math.random()*4;
+    mesh.position.set(
+      r*Math.sin(phi)*Math.cos(theta),
+      r*Math.sin(phi)*Math.sin(theta),
+      r*Math.cos(phi)
+    );
+    mesh.userData={ox:mesh.position.x,oy:mesh.position.y,oz:mesh.position.z,speed:0.3+Math.random()*0.5,phase:Math.random()*Math.PI*2};
+    scene.add(mesh);
+    nodes.push(mesh);
+  }
+
+  const lineMat=new THREE.LineBasicMaterial({color:0x21262d,transparent:true,opacity:0.5});
+  for(let i=0;i<nodeCount;i++){
+    for(let j=i+1;j<nodeCount;j++){
+      const dist=nodes[i].position.distanceTo(nodes[j].position);
+      if(dist<7){
+        const geo=new THREE.BufferGeometry().setFromPoints([nodes[i].position,nodes[j].position]);
+        scene.add(new THREE.Line(geo,lineMat));
+      }
+    }
+  }
+
+  let mx=0,my=0;
+  document.addEventListener("mousemove",e=>{
+    mx=(e.clientX/window.innerWidth-0.5)*0.6;
+    my=(e.clientY/window.innerHeight-0.5)*0.6;
+  });
+
+  const clock=new THREE.Clock();
+  function animate(){
+    requestAnimationFrame(animate);
+    const t=clock.getElapsedTime();
+    nodes.forEach(n=>{
+      n.position.x=n.userData.ox+Math.sin(t*n.userData.speed+n.userData.phase)*0.4;
+      n.position.y=n.userData.oy+Math.cos(t*n.userData.speed+n.userData.phase*1.3)*0.4;
+    });
+    scene.rotation.y+=0.0015+mx*0.01;
+    scene.rotation.x+=(my*0.01-scene.rotation.x)*0.05;
+    renderer.render(scene,camera);
+  }
+  animate();
+})();
+
+/* ─── D3 FORCE GRAPH ─── */
+(function(){
+  const el=document.getElementById("d3-graph");
+  const w=el.offsetWidth||900,h=400;
+  const skills=[
+    {id:"OSPF",group:1},{id:"BGP",group:1},{id:"MPLS",group:1},{id:"VLAN",group:1},{id:"STP",group:1},{id:"QoS",group:1},
+    {id:"FortiGate",group:2},{id:"IPS",group:2},{id:"WAF",group:2},{id:"VPN",group:2},{id:"RADIUS",group:2},
+    {id:"Python",group:3},{id:"Docker",group:3},{id:"K8s",group:3},{id:"Netmiko",group:3},{id:"Ansible",group:3},
+    {id:"Grafana",group:4},{id:"Zabbix",group:4},{id:"PRTG",group:4},
+    {id:"Cisco",group:5},{id:"Ruijie",group:5},{id:"EVE-NG",group:5}
+  ];
+  const links=[];
+  const groups={1:[],2:[],3:[],4:[],5:[]};
+  skills.forEach(s=>groups[s.group].push(s.id));
+  Object.values(groups).forEach(g=>{
+    for(let i=0;i<g.length-1;i++) links.push({source:g[i],target:g[i+1],value:1});
+    if(g.length>2) links.push({source:g[0],target:g[g.length-1],value:1});
+  });
+  links.push({source:"OSPF",target:"FortiGate"},{source:"BGP",target:"VPN"},{source:"Python",target:"Netmiko"},{source:"Docker",target:"K8s"},{source:"Grafana",target:"Zabbix"});
+
+  const colors={1:"#58a6ff",2:"#f85149",3:"#3fb950",4:"#d29922",5:"#a371f7"};
+  const svg=d3.select("#d3-graph").append("svg").attr("width",w).attr("height",h);
+  const sim=d3.forceSimulation(skills)
+    .force("link",d3.forceLink(links).id(d=>d.id).distance(60))
+    .force("charge",d3.forceManyBody().strength(-120))
+    .force("center",d3.forceCenter(w/2,h/2))
+    .force("collision",d3.forceCollide(20));
+
+  const link=svg.append("g").selectAll("line").data(links).join("line")
+    .attr("stroke","#21262d").attr("stroke-width",1).attr("stroke-opacity",0.6);
+
+  const node=svg.append("g").selectAll("g").data(skills).join("g")
+    .call(d3.drag()
+      .on("start",(e,d)=>{if(!e.active)sim.alphaTarget(0.3).restart();d.fx=d.x;d.fy=d.y})
+      .on("drag",(e,d)=>{d.fx=e.x;d.fy=e.y})
+      .on("end",(e,d)=>{if(!e.active)sim.alphaTarget(0);d.fx=null;d.fy=null}));
+
+  node.append("circle").attr("r",22).attr("fill",d=>`${colors[d.group]}18`).attr("stroke",d=>colors[d.group]).attr("stroke-width",1);
+  node.append("text").text(d=>d.id).attr("text-anchor","middle").attr("dominant-baseline","middle")
+    .attr("font-size","9px").attr("font-family","Space Mono,monospace").attr("fill",d=>colors[d.group]);
+
+  sim.on("tick",()=>{
+    link.attr("x1",d=>d.source.x).attr("y1",d=>d.source.y).attr("x2",d=>d.target.x).attr("y2",d=>d.target.y);
+    node.attr("transform",d=>`translate(${Math.max(22,Math.min(w-22,d.x))},${Math.max(22,Math.min(h-22,d.y))})`);
+  });
+})();
+</script>
+</body>
+</html>
