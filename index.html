@@ -7,11 +7,11 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
 <style>
 :root[data-theme="dark"]{
 --bg:#080c10;--bg2:#0d1117;--bg3:#161b22;--bg4:#21262d;
+--bg-t:rgba(8,12,16,0.55);--bg2-t:rgba(13,17,23,0.50);--bg3-t:rgba(22,27,34,0.55);--bg4-t:rgba(33,38,45,0.50);
 --border:#30363d;--border2:#484f58;
 --text:#e6edf3;--text2:#8b949e;--text3:#484f58;
 --accent:#58a6ff;--accent2:#3fb950;--accent3:#d29922;
@@ -31,8 +31,8 @@ html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--text);font-family:"Space Mono",monospace;overflow-x:hidden;cursor:none}
 
 /* CUSTOM CURSOR */
-.cursor{position:fixed;width:8px;height:8px;background:var(--accent);border-radius:50%;pointer-events:none;z-index:9999;transition:transform 0.1s;mix-blend-mode:difference}
-.cursor-ring{position:fixed;width:32px;height:32px;border:1px solid var(--accent);border-radius:50%;pointer-events:none;z-index:9998;transition:all 0.15s ease;opacity:0.6}
+.cursor{position:fixed;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);font-family:"Space Mono",monospace;font-size:13px;font-weight:700;color:var(--accent);white-space:nowrap;letter-spacing:-1px;text-shadow:0 0 8px var(--accent);animation:cursorBlink 0.75s step-end infinite}
+.cursor-ring{display:none}
 
 /* SCROLLBAR */
 ::-webkit-scrollbar{width:3px}
@@ -48,7 +48,7 @@ nav.scrolled{background:rgba(8,12,16,0.85);border-color:var(--border);backdrop-f
 .nav-links a{font-size:11px;color:var(--text2);text-decoration:none;padding:6px 10px;border-radius:6px;transition:all 0.2s;letter-spacing:0.5px}
 .nav-links a:hover{color:var(--accent);background:var(--glow)}
 .nav-controls{display:flex;align-items:center;gap:8px}
-.toggle-btn{background:var(--bg3);border:1px solid var(--border);color:var(--text2);font-size:11px;padding:6px 12px;border-radius:6px;cursor:none;font-family:"Space Mono",monospace;transition:all 0.2s;letter-spacing:0.5px}
+.toggle-btn{background:rgba(22,27,34,0.5);border:1px solid var(--border);color:var(--text2);font-size:11px;padding:6px 12px;border-radius:6px;cursor:none;font-family:"Space Mono",monospace;transition:all 0.2s;letter-spacing:0.5px;backdrop-filter:blur(6px)}
 .toggle-btn:hover{border-color:var(--accent);color:var(--accent)}
 .hamburger{display:none;flex-direction:column;gap:4px;background:none;border:none;cursor:none;padding:4px}
 .hamburger span{width:20px;height:1.5px;background:var(--text2);transition:all 0.3s}
@@ -57,25 +57,29 @@ nav.scrolled{background:rgba(8,12,16,0.85);border-color:var(--border);backdrop-f
 #hero{position:relative;height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden}
 #three-canvas{position:absolute;top:0;left:0;width:100%;height:100%;z-index:0}
 .hero-content{position:relative;z-index:2;text-align:center;padding:0 20px}
-.hero-badge{display:inline-flex;align-items:center;gap:8px;background:var(--bg3);border:1px solid var(--border);border-radius:20px;padding:6px 14px;font-size:11px;color:var(--text2);margin-bottom:24px;letter-spacing:0.5px}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(22,27,34,0.5);border:1px solid var(--border);border-radius:20px;padding:6px 14px;font-size:11px;color:var(--text2);margin-bottom:24px;letter-spacing:0.5px;backdrop-filter:blur(8px)}
 .hero-badge::before{content:"";width:6px;height:6px;background:var(--accent2);border-radius:50%;animation:pulse 2s infinite}
 .hero-name{font-family:"Syne",sans-serif;font-weight:800;font-size:clamp(40px,7vw,88px);line-height:0.95;letter-spacing:-2px;color:var(--text);margin-bottom:16px}
 .hero-name .line2{color:var(--accent);display:block}
-.hero-title{font-size:clamp(12px,1.5vw,15px);color:var(--text2);letter-spacing:2px;margin-bottom:32px;text-transform:uppercase}
+.hero-title{font-size:clamp(12px,1.5vw,15px);color:var(--text2);letter-spacing:2px;margin-bottom:32px;text-transform:uppercase;min-height:24px}
+.tw-cursor{animation:blink 0.75s step-end infinite;color:var(--accent)}
 .hero-tags{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:40px}
-.tag{background:var(--bg3);border:1px solid var(--border);color:var(--text2);font-size:10px;padding:4px 10px;border-radius:4px;letter-spacing:0.5px;transition:all 0.2s}
+.tag{background:rgba(22,27,34,0.45);border:1px solid var(--border);color:var(--text2);font-size:10px;padding:4px 10px;border-radius:4px;letter-spacing:0.5px;transition:all 0.2s;backdrop-filter:blur(6px)}
 .tag:hover{border-color:var(--accent);color:var(--accent)}
 .hero-cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
 .btn-primary{background:var(--accent);color:#000;font-family:"Space Mono",monospace;font-size:12px;font-weight:700;padding:12px 24px;border-radius:8px;border:none;cursor:none;text-decoration:none;transition:all 0.2s;letter-spacing:0.5px}
 .btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 24px var(--glow)}
 .btn-secondary{background:transparent;color:var(--text);font-family:"Space Mono",monospace;font-size:12px;padding:12px 24px;border-radius:8px;border:1px solid var(--border);cursor:none;text-decoration:none;transition:all 0.2s;letter-spacing:0.5px}
 .btn-secondary:hover{border-color:var(--accent);color:var(--accent)}
+.hero-socials{display:flex;gap:12px;justify-content:center;margin-top:16px}
+.social-btn{display:inline-flex;align-items:center;gap:8px;background:var(--bg3);border:1px solid var(--border);color:var(--text2);font-family:"Space Mono",monospace;font-size:11px;padding:9px 16px;border-radius:8px;text-decoration:none;transition:all 0.2s;letter-spacing:0.3px;cursor:none}
+.social-btn:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-2px);box-shadow:0 6px 20px var(--glow)}
 .scroll-indicator{position:absolute;bottom:32px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--text3);font-size:10px;letter-spacing:1px}
 .scroll-line{width:1px;height:48px;background:linear-gradient(to bottom,var(--accent),transparent);animation:scrollAnim 2s ease-in-out infinite}
 
 /* SECTIONS */
-section{padding:100px 0;position:relative}
-.container{max-width:1100px;margin:0 auto;padding:0 32px}
+section{padding:100px 0;position:relative;z-index:1}
+.container{max-width:1100px;margin:0 auto;padding:0 32px;position:relative;z-index:1}
 .section-header{margin-bottom:64px}
 .section-num{font-size:11px;color:var(--accent);letter-spacing:2px;margin-bottom:12px;font-family:"Space Mono",monospace}
 .section-title{font-family:"Syne",sans-serif;font-weight:800;font-size:clamp(32px,5vw,56px);letter-spacing:-1.5px;line-height:1;color:var(--text)}
@@ -90,17 +94,17 @@ section{padding:100px 0;position:relative}
 .reveal-delay-4{transition-delay:0.4s}
 
 /* ABOUT */
-#about{background:var(--bg)}
+#about{background:transparent}
 .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
 .about-text p{font-size:14px;line-height:1.9;color:var(--text2);margin-bottom:16px}
 .about-text p strong{color:var(--text)}
 .about-stats{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:32px}
-.stat-card{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:20px;transition:all 0.3s}
+.stat-card{background:var(--bg3-t);border:1px solid var(--border);border-radius:12px;padding:20px;transition:all 0.3s;backdrop-filter:blur(6px)}
 .stat-card:hover{border-color:var(--accent);transform:translateY(-4px)}
 .stat-num{font-family:"Syne",sans-serif;font-size:32px;font-weight:800;color:var(--accent);line-height:1}
 .stat-label{font-size:11px;color:var(--text2);margin-top:4px;letter-spacing:0.5px}
-.terminal-block{background:var(--bg2);border:1px solid var(--border);border-radius:12px;overflow:hidden}
-.terminal-bar{background:var(--bg3);padding:10px 16px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border)}
+.terminal-block{background:var(--bg2-t);border:1px solid var(--border);border-radius:12px;overflow:hidden;backdrop-filter:blur(8px)}
+.terminal-bar{background:rgba(22,27,34,0.6);padding:10px 16px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border)}
 .t-dot{width:10px;height:10px;border-radius:50%}
 .terminal-body{padding:20px;font-size:12px;line-height:2}
 .t-line{display:flex;gap:8px;align-items:flex-start}
@@ -110,21 +114,21 @@ section{padding:100px 0;position:relative}
 .t-comment{color:var(--text3)}
 
 /* SKILLS */
-#skills{background:var(--bg2)}
-#d3-graph{width:100%;height:400px;border-radius:12px;background:var(--bg);border:1px solid var(--border);overflow:hidden}
+#skills{background:transparent}
+#d3-graph{width:100%;height:400px;border-radius:12px;background:rgba(8,12,16,0.4);border:1px solid var(--border);overflow:hidden}
 .skills-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-top:40px}
-.skill-category{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:20px;transition:all 0.3s}
+.skill-category{background:var(--bg-t);border:1px solid var(--border);border-radius:12px;padding:20px;transition:all 0.3s;backdrop-filter:blur(6px)}
 .skill-category:hover{border-color:var(--border2)}
 .skill-cat-title{font-size:11px;color:var(--accent);letter-spacing:1px;margin-bottom:12px;text-transform:uppercase}
 .skill-tags{display:flex;flex-wrap:wrap;gap:6px}
-.skill-tag{font-size:10px;background:var(--bg3);border:1px solid var(--border);color:var(--text2);padding:3px 8px;border-radius:4px;letter-spacing:0.3px;transition:all 0.2s}
+.skill-tag{font-size:10px;background:rgba(22,27,34,0.5);border:1px solid var(--border);color:var(--text2);padding:3px 8px;border-radius:4px;letter-spacing:0.3px;transition:all 0.2s}
 .skill-tag:hover{border-color:var(--accent);color:var(--accent)}
 
 /* CERTS */
-#certs{background:var(--bg)}
+#certs{background:transparent}
 .certs-timeline{position:relative;padding-left:32px}
 .certs-timeline::before{content:"";position:absolute;left:0;top:0;bottom:0;width:1px;background:linear-gradient(to bottom,var(--accent),transparent)}
-.cert-item{position:relative;margin-bottom:40px;padding:24px;background:var(--bg3);border:1px solid var(--border);border-radius:12px;transition:all 0.3s;cursor:none}
+.cert-item{position:relative;margin-bottom:40px;padding:24px;background:var(--bg3-t);border:1px solid var(--border);border-radius:12px;transition:all 0.3s;cursor:none;backdrop-filter:blur(8px)}
 .cert-item::before{content:"";position:absolute;left:-36px;top:28px;width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 12px var(--accent)}
 .cert-item:hover{border-color:var(--accent);transform:translateX(8px)}
 .cert-header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap}
@@ -137,21 +141,21 @@ section{padding:100px 0;position:relative}
 .cert-meta span{display:flex;align-items:center;gap:4px}
 
 /* PROJECTS */
-#projects{background:var(--bg2)}
+#projects{background:transparent}
 .projects-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:20px}
-.project-card{background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:28px;transition:all 0.3s;position:relative;overflow:hidden;cursor:none}
+.project-card{background:var(--bg-t);border:1px solid var(--border);border-radius:16px;padding:28px;transition:all 0.3s;position:relative;overflow:hidden;cursor:none;backdrop-filter:blur(8px)}
 .project-card::after{content:"";position:absolute;inset:0;background:linear-gradient(135deg,var(--glow),transparent);opacity:0;transition:opacity 0.3s;pointer-events:none}
 .project-card:hover{border-color:var(--accent);transform:translateY(-6px)}
 .project-card:hover::after{opacity:1}
-.project-icon{width:44px;height:44px;border-radius:10px;background:var(--bg3);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:16px}
+.project-icon{width:44px;height:44px;border-radius:10px;background:rgba(22,27,34,0.5);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:16px}
 .project-title{font-family:"Syne",sans-serif;font-weight:700;font-size:18px;color:var(--text);margin-bottom:8px}
 .project-desc{font-size:12px;color:var(--text2);line-height:1.8;margin-bottom:16px}
 .project-tech{display:flex;flex-wrap:wrap;gap:6px}
-.tech-tag{font-size:10px;background:var(--bg3);border:1px solid var(--border);color:var(--text3);padding:2px 8px;border-radius:4px}
+.tech-tag{font-size:10px;background:rgba(22,27,34,0.5);border:1px solid var(--border);color:var(--text3);padding:2px 8px;border-radius:4px}
 
 /* CV */
-#cv-section{background:var(--bg)}
-.cv-card{background:var(--bg3);border:1px solid var(--border);border-radius:20px;padding:48px;text-align:center;max-width:600px;margin:0 auto}
+#cv-section{background:transparent}
+.cv-card{background:var(--bg3-t);border:1px solid var(--border);border-radius:20px;padding:48px;text-align:center;max-width:600px;margin:0 auto;backdrop-filter:blur(10px)}
 .cv-card h3{font-family:"Syne",sans-serif;font-weight:800;font-size:28px;color:var(--text);margin-bottom:12px}
 .cv-card p{font-size:13px;color:var(--text2);margin-bottom:32px;line-height:1.8}
 .cv-buttons{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
@@ -162,9 +166,9 @@ section{padding:100px 0;position:relative}
 .cv-btn-en:hover{border-color:var(--accent);color:var(--accent)}
 
 /* BLOG */
-#blog{background:var(--bg2)}
+#blog{background:transparent}
 .blog-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px}
-.blog-card{background:var(--bg);border:1px solid var(--border);border-radius:16px;overflow:hidden;transition:all 0.3s;cursor:none}
+.blog-card{background:var(--bg-t);border:1px solid var(--border);border-radius:16px;overflow:hidden;transition:all 0.3s;cursor:none;backdrop-filter:blur(8px)}
 .blog-card:hover{border-color:var(--border2);transform:translateY(-4px)}
 .blog-img{height:160px;background:linear-gradient(135deg,var(--bg3),var(--bg4));display:flex;align-items:center;justify-content:center;font-size:40px;border-bottom:1px solid var(--border)}
 .blog-body{padding:20px}
@@ -174,33 +178,33 @@ section{padding:100px 0;position:relative}
 .blog-coming{text-align:center;padding:48px;color:var(--text3);font-size:13px;border:1px dashed var(--border);border-radius:16px}
 
 /* CONTACT */
-#contact{background:var(--bg)}
+#contact{background:transparent}
 .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px}
 .contact-info h3{font-family:"Syne",sans-serif;font-weight:700;font-size:24px;color:var(--text);margin-bottom:16px}
 .contact-info p{font-size:13px;color:var(--text2);line-height:1.8;margin-bottom:32px}
 .contact-links{display:flex;flex-direction:column;gap:12px}
-.contact-link{display:flex;align-items:center;gap:12px;padding:14px 18px;background:var(--bg3);border:1px solid var(--border);border-radius:10px;text-decoration:none;color:var(--text2);font-size:12px;transition:all 0.2s;cursor:none}
+.contact-link{display:flex;align-items:center;gap:12px;padding:14px 18px;background:var(--bg3-t);border:1px solid var(--border);border-radius:10px;text-decoration:none;color:var(--text2);font-size:12px;transition:all 0.2s;cursor:none;backdrop-filter:blur(6px)}
 .contact-link:hover{border-color:var(--accent);color:var(--accent);transform:translateX(6px)}
-.contact-link-icon{width:32px;height:32px;border-radius:8px;background:var(--bg4);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.contact-link-icon{width:32px;height:32px;border-radius:8px;background:rgba(33,38,45,0.5);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
 .contact-form{display:flex;flex-direction:column;gap:16px}
 .form-group{display:flex;flex-direction:column;gap:6px}
 .form-group label{font-size:11px;color:var(--text2);letter-spacing:0.5px}
-.form-group input,.form-group textarea{background:var(--bg3);border:1px solid var(--border);color:var(--text);font-family:"Space Mono",monospace;font-size:12px;padding:12px 16px;border-radius:8px;outline:none;transition:border-color 0.2s;resize:none}
+.form-group input,.form-group textarea{background:rgba(22,27,34,0.5);border:1px solid var(--border);color:var(--text);font-family:"Space Mono",monospace;font-size:12px;padding:12px 16px;border-radius:8px;outline:none;transition:border-color 0.2s;resize:none;backdrop-filter:blur(4px)}
 .form-group input:focus,.form-group textarea:focus{border-color:var(--accent)}
 .form-group textarea{height:120px}
 .form-submit{background:var(--accent);color:#000;font-family:"Space Mono",monospace;font-size:12px;font-weight:700;padding:14px;border-radius:8px;border:none;cursor:none;transition:all 0.2s;letter-spacing:0.5px}
 .form-submit:hover{transform:translateY(-2px);box-shadow:0 8px 24px var(--glow)}
 
 /* FOOTER */
-footer{background:var(--bg2);border-top:1px solid var(--border);padding:32px;text-align:center;font-size:11px;color:var(--text3)}
+footer{background:rgba(13,17,23,0.6);border-top:1px solid var(--border);padding:32px;text-align:center;font-size:11px;color:var(--text3);backdrop-filter:blur(8px)}
 footer span{color:var(--accent)}
 
 /* MODAL */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.8);backdrop-filter:blur(8px);z-index:2000;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity 0.3s}
 .modal-overlay.active{opacity:1;pointer-events:all}
-.modal{background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:32px;max-width:480px;width:100%;transform:translateY(20px) scale(0.97);transition:all 0.3s;max-height:80vh;overflow-y:auto}
+.modal{background:rgba(13,17,23,0.88);border:1px solid var(--border);border-radius:20px;padding:32px;max-width:480px;width:100%;transform:translateY(20px) scale(0.97);transition:all 0.3s;max-height:80vh;overflow-y:auto;backdrop-filter:blur(16px)}
 .modal-overlay.active .modal{transform:translateY(0) scale(1)}
-.modal-close{position:absolute;top:16px;right:16px;background:var(--bg3);border:1px solid var(--border);color:var(--text2);width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:none;font-size:16px;transition:all 0.2s}
+.modal-close{position:absolute;top:16px;right:16px;background:rgba(22,27,34,0.6);border:1px solid var(--border);color:var(--text2);width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:none;font-size:16px;transition:all 0.2s}
 .modal-close:hover{border-color:var(--accent6);color:var(--accent6)}
 
 /* MOBILE MENU */
@@ -217,6 +221,7 @@ footer span{color:var(--accent)}
 @keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 @keyframes typing{from{width:0}to{width:100%}}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+@keyframes cursorBlink{0%,49%{opacity:1}50%,100%{opacity:0}}
 
 /* RESPONSIVE */
 @media(max-width:768px){
@@ -233,6 +238,8 @@ section{padding:80px 0}
 </style>
 </head>
 <body>
+
+<canvas id="parallax-bg" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;opacity:0.35"></canvas>
 
 <div class="cursor" id="cursor"></div>
 <div class="cursor-ring" id="cursorRing"></div>
@@ -278,7 +285,7 @@ section{padding:80px 0}
     <h1 class="hero-name">
       Ferhat <br><span class="line2">Türe</span>
     </h1>
-    <p class="hero-title" data-tr="Ağ & Güvenlik Mühendisi" data-en="Network & Security Engineer">Ağ & Güvenlik Mühendisi</p>
+    <p class="hero-title"><span id="typewriter"></span><span class="tw-cursor">|</span></p>
     <div class="hero-tags">
       <span class="tag">CCNA</span>
       <span class="tag">CCNP ENCOR</span>
@@ -288,10 +295,6 @@ section{padding:80px 0}
       <span class="tag">Python</span>
       <span class="tag">Docker</span>
       <span class="tag">Kubernetes</span>
-    </div>
-    <div class="hero-cta">
-      <a href="#about" class="btn-primary" data-tr="Keşfet" data-en="Explore">Keşfet</a>
-      <a href="#contact" class="btn-secondary" data-tr="İletişime Geç" data-en="Get in Touch">İletişime Geç</a>
     </div>
   </div>
   <div class="scroll-indicator">
@@ -374,12 +377,13 @@ section{padding:80px 0}
     <div id="topo-wrap" class="reveal" style="position:relative;width:100%;background:var(--bg);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:32px">
       <canvas id="topo-canvas" style="display:block;width:100%"></canvas>
       <div id="topo-legend" style="position:absolute;bottom:10px;left:14px;display:flex;flex-wrap:wrap;gap:10px;font-size:9px;font-family:'Space Mono',monospace">
-        <span style="color:#58a6ff">■ CORE / Distribution</span>
-        <span style="color:#3fb950">■ VLAN 10 — Monitoring</span>
-        <span style="color:#d29922">■ VLAN 20 — Security</span>
-        <span style="color:#a371f7">■ VLAN 30 — Protocols</span>
-        <span style="color:#ffa657">■ VLAN 40 — Systems</span>
-        <span style="color:#f85149">■ WAN — MPLS/VRF Automation</span>
+        <span style="color:#58a6ff">■ CORE — CCNP ENCOR</span>
+        <span style="color:#d29922">■ SECURITY — FortiGate NSE4</span>
+        <span style="color:#3fb950">■ DISTRIBUTION</span>
+        <span style="color:#a371f7">■ ACCESS VLANs</span>
+        <span style="color:#ffa657">■ AUTOMATION — MPLS/VRF</span>
+        <span style="color:#79c0ff">■ CCNP ENARSI — Target</span>
+        <span style="color:#f85149">■ WAN / BGP</span>
       </div>
     </div>
     <div class="skills-grid" style="margin-top:32px">
@@ -566,17 +570,6 @@ section{padding:80px 0}
           <span class="tech-tag">Napalm</span><span class="tech-tag">Ansible</span>
         </div>
       </div>
-      <div class="project-card reveal reveal-delay-4" onclick="openModal('localai')">
-        <div class="project-icon">🤖</div>
-        <div class="project-title" data-tr="Local AI & Geliştirme Ortamı" data-en="Local AI & Dev Environment">Local AI & Geliştirme Ortamı</div>
-        <div class="project-desc" data-tr="Gizlilik odaklı yerel LLM'ler çalıştırıyor, Cursor/VSCode ile yapay zeka destekli geliştirme ortamı kurdum. AdGuard DNS ve Cloudflare Tunnels ile ağ optimizasyonu." data-en="Running privacy-focused local LLMs. AI-assisted development environment with Cursor/VSCode. Network optimization with AdGuard DNS and Cloudflare Tunnels.">
-          Gizlilik odaklı yerel LLM'ler çalıştırıyor, Cursor/VSCode ile yapay zeka destekli geliştirme ortamı.
-        </div>
-        <div class="project-tech">
-          <span class="tech-tag">Local LLM</span><span class="tech-tag">Cursor</span>
-          <span class="tech-tag">AdGuard</span><span class="tech-tag">Cloudflare</span>
-        </div>
-      </div>
     </div>
   </div>
 </section>
@@ -691,14 +684,132 @@ section{padding:80px 0}
 </div>
 
 <script>
+/* ─── PARALLAX FIBER BACKGROUND ─── */
+(function(){
+  const bg=document.getElementById("parallax-bg");
+  if(!bg)return;
+  const bctx=bg.getContext("2d");
+  let W,H;
+  function resize(){W=bg.width=window.innerWidth;H=bg.height=window.innerHeight;}
+  resize();
+  window.addEventListener("resize",resize);
+
+  // Fiber lines — these cross the FULL width at various angles
+  // Positions are in "page-space" as scroll fraction 0..1
+  const FIBER_COUNT=22;
+  const fibers=Array.from({length:FIBER_COUNT},(_,i)=>{
+    const isVertical=i<10; // mostly vertical
+    return {
+      // start/end as fractions of viewport
+      x0:Math.random(),
+      x1:Math.random()*0.4+(i%2===0?0:0.6), // bias to sides
+      // y as fraction of total page scroll range
+      yPage0:Math.random(),
+      yPage1:Math.random(),
+      cpx:0.2+Math.random()*0.6,
+      cpyOff:(Math.random()-0.5)*0.3,
+      alpha:0.025+Math.random()*0.045,
+      width:0.4+Math.random()*1.0,
+      hue:200+Math.random()*18,
+      parallaxRate:0.3+Math.random()*0.5,
+    };
+  });
+
+  const bgPkts=[];let bgF=0;
+  function spawnBg(){
+    const f=fibers[Math.floor(Math.random()*fibers.length)];
+    bgPkts.push({f,t:0,speed:0.004+Math.random()*0.005,rev:Math.random()<0.5,sz:0.8+Math.random()*1.4,a:0.4+Math.random()*0.5});
+  }
+
+  function renderBg(){
+    requestAnimationFrame(renderBg);
+    bgF++;
+    bctx.clearRect(0,0,W,H);
+    const scrollY=window.scrollY||0;
+    const docH=Math.max(document.body.scrollHeight,2000);
+    const scrollFrac=scrollY/docH;
+
+    fibers.forEach(f=>{
+      // Convert page-fraction y to screen y with parallax
+      const baseY0=(f.yPage0-scrollFrac*f.parallaxRate)*H*3;
+      const baseY1=(f.yPage1-scrollFrac*f.parallaxRate)*H*3;
+
+      const fx0=f.x0*W, fx1=f.x1*W;
+      const cpy=(baseY0+baseY1)/2+f.cpyOff*H;
+      const cpx=f.cpx*W;
+
+      // Draw multiple vertical tiles
+      for(let tile=-1;tile<=3;tile++){
+        const fy0=baseY0+tile*H;
+        const fy1=baseY1+tile*H;
+        if(Math.min(fy0,fy1)>H+300||Math.max(fy0,fy1)<-300) continue;
+        bctx.save();
+        // Glow layer
+        bctx.beginPath();bctx.moveTo(fx0,fy0);
+        bctx.quadraticCurveTo(cpx,cpy+tile*H,fx1,fy1);
+        bctx.strokeStyle=`hsla(${f.hue},90%,65%,${f.alpha*0.5})`;
+        bctx.lineWidth=f.width*3.5;bctx.stroke();
+        // Core line
+        bctx.beginPath();bctx.moveTo(fx0,fy0);
+        bctx.quadraticCurveTo(cpx,cpy+tile*H,fx1,fy1);
+        bctx.strokeStyle=`hsla(${f.hue},95%,72%,${f.alpha})`;
+        bctx.lineWidth=f.width;bctx.stroke();
+        bctx.restore();
+      }
+    });
+
+    if(bgF%10===0) spawnBg();
+
+    for(let i=bgPkts.length-1;i>=0;i--){
+      const p=bgPkts[i];
+      p.t+=p.speed;
+      if(p.t>=1){bgPkts.splice(i,1);continue;}
+      const f=p.f;
+      const scrollY2=window.scrollY||0;
+      const docH2=Math.max(document.body.scrollHeight,2000);
+      const sf2=scrollY2/docH2;
+      const baseY0=(f.yPage0-sf2*f.parallaxRate)*H*3;
+      const baseY1=(f.yPage1-sf2*f.parallaxRate)*H*3;
+      const fx0=f.x0*W,fx1=f.x1*W,cpx=f.cpx*W;
+      const cpy=(baseY0+baseY1)/2+f.cpyOff*H;
+      const rawT=p.rev?1-p.t:p.t;
+      const ease=rawT<0.5?2*rawT*rawT:1-Math.pow(-2*rawT+2,2)/2;
+      const mt=1-ease;
+      // Pick best tile
+      let best=0,bestD=Infinity;
+      for(let tile=-1;tile<=3;tile++){
+        const fy0=baseY0+tile*H,fy1=baseY1+tile*H;
+        const mid=(fy0+fy1)/2;
+        const d=Math.abs(mid-H/2);
+        if(d<bestD){bestD=d;best=tile;}
+      }
+      const fy0=baseY0+best*H,fy1=baseY1+best*H;
+      const cpyT=cpy+best*H;
+      const px=mt*mt*fx0+2*mt*ease*cpx+ease*ease*fx1;
+      const py=mt*mt*fy0+2*mt*ease*cpyT+ease*ease*fy1;
+      if(py<-20||py>H+20)continue;
+      const fa=Math.sin(p.t*Math.PI)*p.a;
+      bctx.save();
+      bctx.beginPath();bctx.arc(px,py,p.sz*2,0,Math.PI*2);
+      bctx.fillStyle=`hsla(${f.hue},100%,70%,${fa*0.2})`;bctx.fill();
+      bctx.beginPath();bctx.arc(px,py,p.sz,0,Math.PI*2);
+      bctx.fillStyle=`hsla(${f.hue},100%,76%,${fa})`;
+      bctx.shadowColor=`hsla(${f.hue},100%,70%,1)`;bctx.shadowBlur=p.sz*4;
+      bctx.fill();bctx.shadowBlur=0;bctx.restore();
+    }
+  }
+  renderBg();
+})();
+
 /* ─── CURSOR ─── */
 const cur=document.getElementById("cursor"),ring=document.getElementById("cursorRing");
+cur.textContent="</>";
 document.addEventListener("mousemove",e=>{
-  cur.style.left=e.clientX-4+"px";cur.style.top=e.clientY-4+"px";
-  ring.style.left=e.clientX-16+"px";ring.style.top=e.clientY-16+"px";
+  cur.style.left=e.clientX+"px";
+  cur.style.top=e.clientY+"px";
 });
-document.addEventListener("mousedown",()=>{ring.style.transform="scale(0.7)"});
-document.addEventListener("mouseup",()=>{ring.style.transform="scale(1)"});
+document.addEventListener("mousedown",()=>{cur.style.transform="translate(-50%,-50%) scale(0.8)"});
+document.addEventListener("mouseup",()=>{cur.style.transform="translate(-50%,-50%) scale(1)"});
 
 /* ─── NAV SCROLL ─── */
 window.addEventListener("scroll",()=>{
@@ -763,75 +874,340 @@ function closeModal(e){
 }
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closeModal()});
 
-/* ─── THREE.JS 3D NETWORK ─── */
+
+/* ─── HERO FIBER DATACENTER ANIMATION ─── */
 (function(){
   const canvas=document.getElementById("three-canvas");
-  const renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:true});
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
-  const scene=new THREE.Scene();
-  const camera=new THREE.PerspectiveCamera(60,window.innerWidth/window.innerHeight,0.1,1000);
-  camera.position.set(0,0,28);
+  if(!canvas)return;
+  const ctx=canvas.getContext("2d");
 
   function resize(){
-    renderer.setSize(window.innerWidth,window.innerHeight);
-    camera.aspect=window.innerWidth/window.innerHeight;
-    camera.updateProjectionMatrix();
+    canvas.width=window.innerWidth;
+    canvas.height=window.innerHeight;
   }
   resize();
   window.addEventListener("resize",resize);
 
-  const nodes=[];
-  const nodeCount=42;
-  const nodeGeo=new THREE.SphereGeometry(0.18,8,8);
+  // Datacenter node definitions — left cluster and right cluster
+  // Each DC has a label shown as header inside the rack
+  const DCS=[
+    // LEFT side DCs
+    {x:0.04, y:0.18, w:0.080, h:0.13, side:"left",  icon:"▶", label:"Keşfet",       href:"#about"},
+    {x:0.04, y:0.44, w:0.080, h:0.13, side:"left",  icon:"✉", label:"İletişime Geç",href:"#contact"},
+    {x:0.04, y:0.70, w:0.080, h:0.13, side:"left",  icon:"☰", label:"CV Görüntüle", href:"#cv-section"},
+    // RIGHT side DCs
+    {x:0.875,y:0.18, w:0.080, h:0.13, side:"right", icon:"✓", label:"Sertifikalar",  href:"#certs"},
+    {x:0.875,y:0.44, w:0.080, h:0.13, side:"right", icon:"◈", label:"LinkedIn",      href:"https://linkedin.com/in/ferhat-ture"},
+    {x:0.875,y:0.70, w:0.080, h:0.13, side:"right", icon:"◉", label:"GitHub",        href:"https://github.com/ferhatture"},
+  ];
 
-  for(let i=0;i<nodeCount;i++){
-    const isDark=document.documentElement.getAttribute("data-theme")!=="light";
-    const colors=[0x58a6ff,0x3fb950,0xa371f7,0xd29922,0xffa657];
-    const mat=new THREE.MeshBasicMaterial({color:colors[Math.floor(Math.random()*colors.length)],transparent:true,opacity:0.85});
-    const mesh=new THREE.Mesh(nodeGeo,mat);
-    const phi=Math.acos(-1+2*i/nodeCount);
-    const theta=Math.sqrt(nodeCount*Math.PI)*phi;
-    const r=12+Math.random()*4;
-    mesh.position.set(
-      r*Math.sin(phi)*Math.cos(theta),
-      r*Math.sin(phi)*Math.sin(theta),
-      r*Math.cos(phi)
-    );
-    mesh.userData={ox:mesh.position.x,oy:mesh.position.y,oz:mesh.position.z,speed:0.3+Math.random()*0.5,phase:Math.random()*Math.PI*2};
-    scene.add(mesh);
-    nodes.push(mesh);
+  // Fiber paths: control points in 0-1 space
+  // Each fiber: from DC to DC with a bezier curve
+  const FIBER_PAIRS=[
+    {from:0, to:3},{from:0, to:4},{from:0, to:5},
+    {from:1, to:3},{from:1, to:4},{from:1, to:5},
+    {from:2, to:3},{from:2, to:4},{from:2, to:5},
+  ];
+
+  // Data packets flying along fibers
+  const packets=[];
+  let frameCount=0;
+
+  // DC blink state
+  const blinkPhase=DCS.map(()=>Math.random()*Math.PI*2);
+
+  function dcCenter(dc,W,H){
+    return {x:(dc.x+dc.w/2)*W, y:(dc.y+dc.h/2)*H};
   }
 
-  const lineMat=new THREE.LineBasicMaterial({color:0x21262d,transparent:true,opacity:0.5});
-  for(let i=0;i<nodeCount;i++){
-    for(let j=i+1;j<nodeCount;j++){
-      const dist=nodes[i].position.distanceTo(nodes[j].position);
-      if(dist<7){
-        const geo=new THREE.BufferGeometry().setFromPoints([nodes[i].position,nodes[j].position]);
-        scene.add(new THREE.Line(geo,lineMat));
-      }
-    }
+  function getBezierPoint(t,p0,cp1,cp2,p1){
+    const mt=1-t;
+    return {
+      x:mt*mt*mt*p0.x+3*mt*mt*t*cp1.x+3*mt*t*t*cp2.x+t*t*t*p1.x,
+      y:mt*mt*mt*p0.y+3*mt*mt*t*cp1.y+3*mt*t*t*cp2.y+t*t*t*p1.y
+    };
   }
 
-  let mx=0,my=0;
-  document.addEventListener("mousemove",e=>{
-    mx=(e.clientX/window.innerWidth-0.5)*0.6;
-    my=(e.clientY/window.innerHeight-0.5)*0.6;
+  function getFiberPoints(pair,W,H){
+    const a=DCS[pair.from],b=DCS[pair.to];
+    const pa=dcCenter(a,W,H),pb=dcCenter(b,W,H);
+    // Control points curve through centre
+    const midX=W/2;
+    const offsetY=(pb.y-pa.y)*0.15;
+    const cp1={x:midX-W*0.05+Math.random()*W*0.02, y:pa.y+offsetY};
+    const cp2={x:midX+W*0.05-Math.random()*W*0.02, y:pb.y-offsetY};
+    return {pa,pb,cp1,cp2};
+  }
+
+  function spawnPacket(W,H){
+    const pair=FIBER_PAIRS[Math.floor(Math.random()*FIBER_PAIRS.length)];
+    const {pa,pb,cp1,cp2}=getFiberPoints(pair,W,H);
+    const reverse=Math.random()<0.5;
+    packets.push({
+      pair,
+      pa:reverse?pb:pa,
+      pb:reverse?pa:pb,
+      cp1:reverse?cp2:cp1,
+      cp2:reverse?cp1:cp2,
+      t:0,
+      speed:0.004+Math.random()*0.005,
+      size:1.5+Math.random()*2.5,
+      alpha:0.7+Math.random()*0.3,
+      color:`hsl(${195+Math.random()*25},100%,${62+Math.random()*20}%)`
+    });
+  }
+
+  // Pre-compute stable fiber control points (not random each frame)
+  const fiberCache=FIBER_PAIRS.map(pair=>{
+    const a=DCS[pair.from],b=DCS[pair.to];
+    const spread=(Math.random()-0.5)*0.06;
+    return {pair, cpOffsetX:spread, cpOffsetY:(Math.random()-0.5)*0.04};
   });
 
-  const clock=new THREE.Clock();
-  function animate(){
-    requestAnimationFrame(animate);
-    const t=clock.getElapsedTime();
-    nodes.forEach(n=>{
-      n.position.x=n.userData.ox+Math.sin(t*n.userData.speed+n.userData.phase)*0.4;
-      n.position.y=n.userData.oy+Math.cos(t*n.userData.speed+n.userData.phase*1.3)*0.4;
+  const clock={last:performance.now()};
+
+  function draw(){
+    requestAnimationFrame(draw);
+    const W=canvas.width,H=canvas.height;
+    const now=performance.now();
+    const dt=(now-clock.last)/16.67;
+    clock.last=now;
+    frameCount++;
+
+    // Clear with trail
+    ctx.fillStyle="rgba(8,12,16,0.22)";
+    ctx.fillRect(0,0,W,H);
+
+    const t=now*0.001;
+
+    // ── Draw fiber paths (stable, multi-layer) ──
+    fiberCache.forEach(fc=>{
+      const pair=fc.pair;
+      const a=DCS[pair.from],b=DCS[pair.to];
+      const pa=dcCenter(a,W,H),pb=dcCenter(b,W,H);
+      const midX=W/2+fc.cpOffsetX*W;
+      const cp1={x:midX, y:pa.y+(pb.y-pa.y)*0.25+fc.cpOffsetY*H};
+      const cp2={x:midX, y:pa.y+(pb.y-pa.y)*0.75-fc.cpOffsetY*H};
+
+      // Outer glow fiber
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(pa.x,pa.y);
+      ctx.bezierCurveTo(cp1.x,cp1.y,cp2.x,cp2.y,pb.x,pb.y);
+      ctx.strokeStyle="rgba(56,139,255,0.04)";
+      ctx.lineWidth=4;
+      ctx.stroke();
+      // Mid fiber
+      ctx.beginPath();
+      ctx.moveTo(pa.x,pa.y);
+      ctx.bezierCurveTo(cp1.x,cp1.y,cp2.x,cp2.y,pb.x,pb.y);
+      ctx.strokeStyle="rgba(88,166,255,0.08)";
+      ctx.lineWidth=1.2;
+      ctx.stroke();
+      ctx.restore();
     });
-    scene.rotation.y+=0.0015+mx*0.01;
-    scene.rotation.x+=(my*0.01-scene.rotation.x)*0.05;
-    renderer.render(scene,camera);
+
+    // ── Draw datacenters ──
+    DCS.forEach((dc,i)=>{
+      const x=dc.x*W, y=dc.y*H, w=dc.w*W, h=dc.h*H;
+      const cx=x+w/2, cy=y+h/2;
+
+      // Soft glow behind DC
+      const glow=ctx.createRadialGradient(cx,cy,0,cx,cy,w*1.6);
+      glow.addColorStop(0,"rgba(56,139,255,0.07)");
+      glow.addColorStop(1,"transparent");
+      ctx.fillStyle=glow;
+      ctx.fillRect(x-w*0.6,y-h*0.6,w*2.2,h*2.2);
+
+      ctx.save();
+
+      // DC body with subtle gradient
+      const bodyGrad=ctx.createLinearGradient(x,y,x,y+h);
+      bodyGrad.addColorStop(0,"rgba(16,22,32,0.96)");
+      bodyGrad.addColorStop(1,"rgba(8,12,18,0.96)");
+      ctx.fillStyle=bodyGrad;
+      ctx.strokeStyle="rgba(56,139,255,0.40)";
+      ctx.lineWidth=1;
+      ctx.beginPath();ctx.roundRect(x,y,w,h,4);
+      ctx.fill();ctx.stroke();
+
+      // Top accent bar
+      const barGrad=ctx.createLinearGradient(x,y,x+w,y);
+      barGrad.addColorStop(0,"rgba(56,139,255,0.6)");
+      barGrad.addColorStop(1,"rgba(56,139,255,0.1)");
+      ctx.fillStyle=barGrad;
+      ctx.beginPath();ctx.roundRect(x,y,w,h*0.06,4);
+      ctx.fill();
+
+      // Icon (top center)
+      ctx.font=`bold ${Math.max(9,w*0.18)}px 'Space Mono',monospace`;
+      ctx.fillStyle="rgba(88,166,255,0.85)";
+      ctx.textAlign="center";
+      ctx.fillText(dc.icon, cx, y+h*0.22);
+
+      // Label text (wrapped if needed)
+      const words=dc.label.split(" ");
+      ctx.font=`bold ${Math.max(6.5,w*0.105)}px 'Space Mono',monospace`;
+      ctx.fillStyle="rgba(200,220,255,0.90)";
+      // Try single line first
+      const full=dc.label;
+      const measured=ctx.measureText(full).width;
+      if(measured<w*0.88){
+        ctx.fillText(full, cx, y+h*0.44);
+      } else {
+        // Two lines
+        const mid=Math.ceil(words.length/2);
+        ctx.fillText(words.slice(0,mid).join(" "), cx, y+h*0.40);
+        ctx.fillText(words.slice(mid).join(" "), cx, y+h*0.54);
+      }
+
+      // Server rack rows (decorative)
+      const rowCount=3;
+      const rowY0=y+h*0.62;
+      const rowH=h*0.08;
+      const rowGap=h*0.04;
+      for(let r=0;r<rowCount;r++){
+        const ry=rowY0+r*(rowH+rowGap);
+        // Row bg
+        ctx.fillStyle="rgba(20,30,45,0.9)";
+        ctx.beginPath();ctx.roundRect(x+w*0.07,ry,w*0.86,rowH,2);ctx.fill();
+        // Activity bar
+        const actW=(0.3+Math.sin(t*2.5+i*0.8+r*1.1)*0.25)*w*0.55;
+        const actGrad=ctx.createLinearGradient(x+w*0.10,ry,x+w*0.10+actW,ry);
+        actGrad.addColorStop(0,"rgba(88,166,255,0.5)");
+        actGrad.addColorStop(1,"rgba(88,166,255,0.1)");
+        ctx.fillStyle=actGrad;
+        ctx.beginPath();ctx.roundRect(x+w*0.10,ry+rowH*0.2,actW,rowH*0.6,1);ctx.fill();
+        // LED dot
+        const ledBright=Math.sin(t*4+i*1.3+r*0.9)>0.1;
+        ctx.beginPath();ctx.arc(x+w*0.87,ry+rowH*0.5,1.8,0,Math.PI*2);
+        ctx.fillStyle=ledBright?"rgba(63,185,80,0.95)":"rgba(63,185,80,0.18)";
+        if(ledBright){ctx.shadowColor="rgba(63,185,80,0.8)";ctx.shadowBlur=4;}
+        ctx.fill();ctx.shadowBlur=0;
+      }
+
+      // Red status LED (top-right corner)
+      const blinkVal=(Math.sin(t*2.2+blinkPhase[i])+1)/2;
+      const redAlpha=0.25+blinkVal*0.75;
+      if(blinkVal>0.5){
+        const pulse=(blinkVal-0.5)*2;
+        ctx.beginPath();ctx.arc(x+w*0.88,y+h*0.04,2+pulse*5,0,Math.PI*2);
+        ctx.strokeStyle=`rgba(248,81,73,${(1-pulse)*0.35})`;
+        ctx.lineWidth=1;ctx.stroke();
+      }
+      ctx.beginPath();ctx.arc(x+w*0.88,y+h*0.04,2.5,0,Math.PI*2);
+      ctx.fillStyle=`rgba(248,81,73,${redAlpha})`;
+      ctx.shadowColor="rgba(248,81,73,0.9)";ctx.shadowBlur=blinkVal>0.6?10:3;
+      ctx.fill();ctx.shadowBlur=0;
+
+      ctx.restore();
+    });
+
+    // ── Spawn packets ──
+    if(frameCount%5===0) spawnPacket(W,H);
+
+    // ── Draw & move packets ──
+    for(let i=packets.length-1;i>=0;i--){
+      const p=packets[i];
+      p.t+=p.speed*dt;
+      if(p.t>=1){packets.splice(i,1);continue;}
+
+      const ease=p.t<0.5?2*p.t*p.t:1-Math.pow(-2*p.t+2,2)/2;
+      const pos=getBezierPoint(ease,p.pa,p.cp1,p.cp2,p.pb);
+      const fadeAlpha=Math.sin(p.t*Math.PI)*p.alpha;
+
+      ctx.save();
+      // Outer glow
+      ctx.beginPath();
+      ctx.arc(pos.x,pos.y,p.size*2.5,0,Math.PI*2);
+      ctx.fillStyle=p.color.replace(")",`,${fadeAlpha*0.25})`).replace("hsl","hsla");
+      ctx.fill();
+      // Core particle
+      ctx.beginPath();
+      ctx.arc(pos.x,pos.y,p.size,0,Math.PI*2);
+      ctx.fillStyle=p.color.replace(")",`,${fadeAlpha})`).replace("hsl","hsla");
+      ctx.shadowColor=p.color;
+      ctx.shadowBlur=p.size*5;
+      ctx.fill();
+      ctx.shadowBlur=0;
+
+      // Elongated tail
+      const tailLen=0.045;
+      const prevT=Math.max(0,p.t-tailLen);
+      const prevEase=prevT<0.5?2*prevT*prevT:1-Math.pow(-2*prevT+2,2)/2;
+      const prevPos=getBezierPoint(prevEase,p.pa,p.cp1,p.cp2,p.pb);
+      const tailGrad=ctx.createLinearGradient(prevPos.x,prevPos.y,pos.x,pos.y);
+      tailGrad.addColorStop(0,"transparent");
+      tailGrad.addColorStop(1,p.color.replace(")",`,${fadeAlpha*0.7})`).replace("hsl","hsla"));
+      ctx.beginPath();
+      ctx.moveTo(prevPos.x,prevPos.y);
+      ctx.lineTo(pos.x,pos.y);
+      ctx.strokeStyle=tailGrad;
+      ctx.lineWidth=p.size*1.2;
+      ctx.lineCap="round";
+      ctx.stroke();
+
+      ctx.restore();
+    }
   }
-  animate();
+  draw();
+
+  // ── Make DCs clickable ──
+  canvas.style.cursor="default";
+  canvas.addEventListener("mousemove",ev=>{
+    const rect=canvas.getBoundingClientRect();
+    const mx=(ev.clientX-rect.left)*(canvas.width/rect.width);
+    const my=(ev.clientY-rect.top)*(canvas.height/rect.height);
+    const W=canvas.width,H=canvas.height;
+    let hit=false;
+    DCS.forEach(dc=>{
+      const x=dc.x*W,y=dc.y*H,w=dc.w*W,h=dc.h*H;
+      if(mx>=x&&mx<=x+w&&my>=y&&my<=y+h){hit=true;}
+    });
+    canvas.style.cursor=hit?"pointer":"default";
+  });
+  canvas.addEventListener("click",ev=>{
+    const rect=canvas.getBoundingClientRect();
+    const mx=(ev.clientX-rect.left)*(canvas.width/rect.width);
+    const my=(ev.clientY-rect.top)*(canvas.height/rect.height);
+    const W=canvas.width,H=canvas.height;
+    DCS.forEach(dc=>{
+      const x=dc.x*W,y=dc.y*H,w=dc.w*W,h=dc.h*H;
+      if(mx>=x&&mx<=x+w&&my>=y&&my<=y+h){
+        if(dc.href.startsWith("http")){window.open(dc.href,"_blank");}
+        else{document.querySelector(dc.href)?.scrollIntoView({behavior:"smooth"});}
+      }
+    });
+  });
+})();
+
+
+
+
+
+/* ─── TYPEWRITER ─── */
+(function(){
+  const el=document.getElementById("typewriter");
+  if(!el)return;
+  const phrasesTR=["Ağ & Güvenlik Mühendisi","Network Engineer","CCNP ENCOR Certified","FortiGate NSE4 Specialist","DevOps & Otomasyon"];
+  const phrasesEN=["Network & Security Engineer","CCNP ENCOR Certified","FortiGate NSE4 Specialist","DevOps & Automation","Ankara, Turkey"];
+  let idx=0,charIdx=0,deleting=false;
+  function getPhrases(){return document.documentElement.getAttribute("data-lang")==="en"?phrasesEN:phrasesTR;}
+  function tick(){
+    const phrases=getPhrases();
+    const cur=phrases[idx%phrases.length];
+    if(!deleting){
+      el.textContent=cur.slice(0,charIdx+1);
+      charIdx++;
+      if(charIdx===cur.length){deleting=true;setTimeout(tick,1800);return;}
+    } else {
+      el.textContent=cur.slice(0,charIdx-1);
+      charIdx--;
+      if(charIdx===0){deleting=false;idx++;setTimeout(tick,300);return;}
+    }
+    setTimeout(tick,deleting?48:72);
+  }
+  tick();
 })();
 
 /* ─── PING -T ANIMATION ─── */
@@ -861,280 +1237,340 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape")closeModal()});
   setInterval(addLine,2000);
 })();
 
-/* ─── NETWORK TOPOLOGY CANVAS ─── */
+/* ─── CAREER NETWORK TOPOLOGY CANVAS ─── */
 (function(){
   const wrap=document.getElementById("topo-wrap");
   const canvas=document.getElementById("topo-canvas");
   if(!canvas||!wrap)return;
 
-  const isMobile=window.innerWidth<768;
-  const H=isMobile?520:480;
-  canvas.width=wrap.offsetWidth;
-  canvas.height=H;
-  canvas.style.height=H+"px";
+  function setup(){
+    const W=wrap.clientWidth||900;
+    const M=W<640;
+    const H=M?640:500;
+    canvas.width=W;canvas.height=H;canvas.style.height=H+"px";
+    return{W,H,M};
+  }
+  let dim=setup();
+  let ctx=canvas.getContext("2d");
 
-  const ctx=canvas.getContext("2d");
-  const W=canvas.width;
-
-  /* ── Colour palette ── */
-  const C={
+  /* Palette */
+  const P={
     bg:"#080c10",
     core:"#58a6ff",
-    v10:"#3fb950",   // Monitoring
-    v20:"#d29922",   // Security
-    v30:"#a371f7",   // Protocols
-    v40:"#ffa657",   // Systems
-    wan:"#f85149",   // WAN/MPLS
-    dim:"#21262d",
-    text:"#8b949e",
-    labelBg:"rgba(8,12,16,0.82)"
+    fw:"#d29922",
+    dist:"#3fb950",
+    acc:"#a371f7",
+    wan:"#f85149",
+    auto:"#ffa657",
+    enarsi:"#79c0ff",
+    line:"rgba(255,255,255,0.06)",
+    text:"rgba(255,255,255,0.55)"
   };
 
-  /* ── Layout constants ── */
-  const CX=W/2;
-  // Vertical bands  (% of H)
-  const yWAN   = H*0.10;
-  const yCore  = H*0.26;
-  const yDist  = H*0.43;
-  const yAcc   = H*0.62;
-  const yEnd   = H*0.82;
+  /*
+   * TOPOLOGY LAYOUT  (fractions of W, H)
+   *
+   *         LEFT PANEL          CENTER CORE         RIGHT PANEL
+   *      [AUTOMATION NET]   [ISP]──[RTR1]──[RTR2]  [CCNP ENARSI]
+   *      Python·Netmiko         [FW1]──[FW2]         OSPF·BGP adv
+   *      Ansible·Napalm      [D1]──[D2]──[D3]        IS-IS·EIGRP
+   *                       [A1][A2][A3][A4][A5][A6]   PBR·QoS adv
+   *                        VLAN services per switch
+   *
+   * MPLS/VRF tunnel: RTR1 ──── LEFT cloud
+   * Target path:     RTR2 ──── RIGHT cloud
+   */
+  function buildLayout(W,H,M){
+    const s=M?0.78:1;
+    function nx(f){return W*f;}
+    function ny(f){return H*f;}
 
-  /* ── Node definitions ── */
-  const nodes={
-    // WAN cloud (left side)
-    wan:     {x:CX*0.18, y:yWAN,  label:"WAN\nMPLS/VRF", color:C.wan,  r:22, shape:"cloud"},
-    // Automation remote site
-    python:  {x:CX*0.18, y:yCore, label:"Python\nNetmiko", color:C.wan,  r:18},
-    ansible: {x:CX*0.04, y:yAcc,  label:"Ansible", color:C.wan,  r:16},
-    napalm:  {x:CX*0.30, y:yAcc,  label:"Napalm", color:C.wan,  r:16},
-    docker:  {x:CX*0.04, y:yEnd,  label:"Docker\nK8s",    color:C.wan,  r:16},
+    // Y tiers
+    const yWAN  =ny(0.08);
+    const yCore =ny(0.21);
+    const yFW   =ny(0.34);
+    const yDist =ny(0.47);
+    const yAcc  =ny(0.60);
+    const yEP   =ny(0.74);
+    const yEP2  =ny(0.87);
 
-    // Core router (centre)
-    core:    {x:CX,      y:yCore, label:"CORE-RTR\nCCNP ENCOR", color:C.core, r:26, shape:"router"},
+    // X positions — center cluster spans 0.30..0.70
+    const CL=0.30, CR=0.70; // centre-left, centre-right boundary
 
-    // Distribution L3SW (centre)
-    dist:    {x:CX,      y:yDist, label:"DIST-SW\nL3 Switch",   color:C.core, r:22, shape:"switch"},
+    // Left cloud (Automation) and Right cloud (ENARSI)
+    const xLC=nx(0.10), xRC=nx(0.90);
 
-    // Access switches
-    acc10:   {x:CX*0.52, y:yAcc,  label:"ACC-SW1\nVLAN 10", color:C.v10, r:18, shape:"switch"},
-    acc20:   {x:CX*0.76, y:yAcc,  label:"ACC-SW2\nVLAN 20", color:C.v20, r:18, shape:"switch"},
-    acc30:   {x:CX*1.24, y:yAcc,  label:"ACC-SW3\nVLAN 30", color:C.v30, r:18, shape:"switch"},
-    acc40:   {x:CX*1.48, y:yAcc,  label:"ACC-SW4\nVLAN 40", color:C.v40, r:18, shape:"switch"},
+    const nodes={
+      /* ── WAN / ISP ── */
+      isp:  {x:nx(0.50),y:yWAN, lbl:"ISP / BGP",    c:P.wan,  r:s*16, sh:"cloud"},
 
-    // End devices — VLAN 10 Monitoring
-    grafana: {x:CX*0.44, y:yEnd,  label:"Grafana",  color:C.v10, r:14},
-    zabbix:  {x:CX*0.60, y:yEnd,  label:"Zabbix",   color:C.v10, r:14},
-    prtg:    {x:CX*0.52, y:H*0.93,label:"PRTG",     color:C.v10, r:14},
+      /* ── CORE (redundant) ── */
+      rtr1: {x:nx(0.41),y:yCore,lbl:"CORE-RTR1\nCCNP ENCOR", c:P.core, r:s*16, sh:"hex"},
+      rtr2: {x:nx(0.59),y:yCore,lbl:"CORE-RTR2\nCCNP ENCOR", c:P.core, r:s*16, sh:"hex"},
 
-    // End devices — VLAN 20 Security
-    forti:   {x:CX*0.76, y:yEnd,  label:"FortiGate\nNSE4",  color:C.v20, r:16},
-    ips:     {x:CX*0.68, y:H*0.93,label:"IPS/WAF",  color:C.v20, r:14},
-    vpn:     {x:CX*0.84, y:H*0.93,label:"VPN",      color:C.v20, r:14},
+      /* ── FIREWALL HA ── */
+      fw1:  {x:nx(0.41),y:yFW,  lbl:"FortiGate\nNSE4 Primary",c:P.fw, r:s*14, sh:"shield"},
+      fw2:  {x:nx(0.59),y:yFW,  lbl:"FortiGate\nNSE4 HA",     c:P.fw, r:s*14, sh:"shield"},
 
-    // End devices — VLAN 30 Protocols
-    ospf:    {x:CX*1.16, y:yEnd,  label:"OSPF",     color:C.v30, r:14},
-    bgp:     {x:CX*1.24, y:H*0.93,label:"BGP",      color:C.v30, r:14},
-    mpls:    {x:CX*1.32, y:yEnd,  label:"MPLS\nVXLAN",color:C.v30,r:14},
+      /* ── DISTRIBUTION ── */
+      d1:   {x:nx(0.31),y:yDist,lbl:"DIST-SW1\nOSPF·STP",    c:P.dist,r:s*12, sh:"rect"},
+      d2:   {x:nx(0.50),y:yDist,lbl:"DIST-SW2\nL3·EtherCh",  c:P.dist,r:s*12, sh:"rect"},
+      d3:   {x:nx(0.69),y:yDist,lbl:"DIST-SW3\nHSRP·QoS",    c:P.dist,r:s*12, sh:"rect"},
 
-    // End devices — VLAN 40 Systems
-    ad:      {x:CX*1.44, y:yEnd,  label:"AD/DNS\nDHCP",    color:C.v40, r:14},
-    veeam:   {x:CX*1.56, y:H*0.93,label:"Veeam\nBackup",   color:C.v40, r:14},
-    linux:   {x:CX*1.68, y:yEnd,  label:"Linux\nEVE-NG",   color:C.v40, r:14},
-  };
+      /* ── ACCESS ── */
+      a1:   {x:nx(0.22),y:yAcc, lbl:"VLAN 10\nMonitoring",    c:P.acc, r:s*11, sh:"rect"},
+      a2:   {x:nx(0.34),y:yAcc, lbl:"VLAN 20\nSecurity",      c:P.fw,  r:s*11, sh:"rect"},
+      a3:   {x:nx(0.44),y:yAcc, lbl:"VLAN 30\nRouting",       c:P.dist,r:s*11, sh:"rect"},
+      a4:   {x:nx(0.56),y:yAcc, lbl:"VLAN 40\nSystems",       c:P.core,r:s*11, sh:"rect"},
+      a5:   {x:nx(0.66),y:yAcc, lbl:"VLAN 50\nWireless",      c:P.acc, r:s*11, sh:"rect"},
+      a6:   {x:nx(0.78),y:yAcc, lbl:"VLAN 60\nMgmt",          c:P.enarsi,r:s*11,sh:"rect"},
 
-  /* ── Edge definitions ── */
-  const edges=[
-    // WAN uplink to core
-    {a:"wan",  b:"core",  label:"MPLS VRF", color:C.wan,  dash:[6,4], w:1.5},
-    {a:"python",b:"wan",  label:"",         color:C.wan,  dash:[4,4], w:1},
-    {a:"ansible",b:"python",label:"",       color:C.wan,  dash:[3,4], w:1},
-    {a:"napalm", b:"python",label:"",       color:C.wan,  dash:[3,4], w:1},
-    {a:"docker", b:"ansible",label:"",      color:C.wan,  dash:[3,4], w:1},
+      /* ── ENDPOINT ROW 1 ── */
+      e1a:  {x:nx(0.19),y:yEP,  lbl:"Grafana",  c:P.acc,  r:s*8},
+      e1b:  {x:nx(0.26),y:yEP,  lbl:"Zabbix",   c:P.acc,  r:s*8},
+      e2a:  {x:nx(0.31),y:yEP,  lbl:"IPsec",    c:P.fw,   r:s*8},
+      e2b:  {x:nx(0.38),y:yEP,  lbl:"WAF",      c:P.fw,   r:s*8},
+      e3a:  {x:nx(0.43),y:yEP,  lbl:"OSPF",     c:P.dist, r:s*8},
+      e3b:  {x:nx(0.49),y:yEP,  lbl:"BGP",      c:P.dist, r:s*8},
+      e4a:  {x:nx(0.55),y:yEP,  lbl:"AD/DNS",   c:P.core, r:s*8},
+      e4b:  {x:nx(0.61),y:yEP,  lbl:"WSUS",     c:P.core, r:s*8},
+      e5a:  {x:nx(0.65),y:yEP,  lbl:"WLC",      c:P.acc,  r:s*8},
+      e5b:  {x:nx(0.72),y:yEP,  lbl:"802.1x",   c:P.acc,  r:s*8},
+      e6a:  {x:nx(0.76),y:yEP,  lbl:"EVE-NG",   c:P.enarsi,r:s*8},
+      e6b:  {x:nx(0.82),y:yEP,  lbl:"Docker",   c:P.enarsi,r:s*8},
 
-    // Core ↔ Dist
-    {a:"core", b:"dist",  label:"Trunk",    color:C.core, dash:[], w:2.5},
+      /* ── ENDPOINT ROW 2 ── */
+      e1c:  {x:nx(0.19),y:yEP2, lbl:"PRTG",     c:P.acc,  r:s*8},
+      e1d:  {x:nx(0.26),y:yEP2, lbl:"SNMP",     c:P.acc,  r:s*8},
+      e2c:  {x:nx(0.31),y:yEP2, lbl:"RADIUS",   c:P.fw,   r:s*8},
+      e2d:  {x:nx(0.38),y:yEP2, lbl:"VPN",      c:P.fw,   r:s*8},
+      e3c:  {x:nx(0.43),y:yEP2, lbl:"VXLAN",    c:P.dist, r:s*8},
+      e3d:  {x:nx(0.49),y:yEP2, lbl:"PBR",      c:P.dist, r:s*8},
+      e4c:  {x:nx(0.55),y:yEP2, lbl:"Exchange", c:P.core, r:s*8},
+      e4d:  {x:nx(0.61),y:yEP2, lbl:"Veeam",    c:P.core, r:s*8},
+      e5c:  {x:nx(0.65),y:yEP2, lbl:"SSID",     c:P.acc,  r:s*8},
+      e6c:  {x:nx(0.76),y:yEP2, lbl:"K8s",      c:P.enarsi,r:s*8},
+      e6d:  {x:nx(0.82),y:yEP2, lbl:"Ansible",  c:P.enarsi,r:s*8},
 
-    // Dist ↔ Access (inter-VLAN routing)
-    {a:"dist", b:"acc10", label:"VLAN 10",  color:C.v10,  dash:[4,3], w:1.5},
-    {a:"dist", b:"acc20", label:"VLAN 20",  color:C.v20,  dash:[4,3], w:1.5},
-    {a:"dist", b:"acc30", label:"VLAN 30",  color:C.v30,  dash:[4,3], w:1.5},
-    {a:"dist", b:"acc40", label:"VLAN 40",  color:C.v40,  dash:[4,3], w:1.5},
+      /* ── LEFT PANEL: AUTOMATION (reached via MPLS/VRF) ── */
+      auto: {x:xLC, y:ny(0.30), lbl:"AUTOMATION\nMPLS/VRF",  c:P.auto, r:s*18, sh:"cloud"},
+      py:   {x:xLC, y:ny(0.50), lbl:"Python\nNetmiko",        c:P.auto, r:s*12, sh:"hex"},
+      ans:  {x:nx(0.06),y:ny(0.65),lbl:"Ansible\nNapalm",    c:P.auto, r:s*10, sh:"rect"},
+      nap:  {x:nx(0.16),y:ny(0.65),lbl:"Network\nAutomation",c:P.auto, r:s*10, sh:"rect"},
 
-    // Access ↔ End devices
-    {a:"acc10",b:"grafana",label:"",color:C.v10,dash:[],w:1},
-    {a:"acc10",b:"zabbix", label:"",color:C.v10,dash:[],w:1},
-    {a:"acc10",b:"prtg",   label:"",color:C.v10,dash:[],w:1},
-    {a:"acc20",b:"forti",  label:"",color:C.v20,dash:[],w:1},
-    {a:"acc20",b:"ips",    label:"",color:C.v20,dash:[],w:1},
-    {a:"acc20",b:"vpn",    label:"",color:C.v20,dash:[],w:1},
-    {a:"acc30",b:"ospf",   label:"",color:C.v30,dash:[],w:1},
-    {a:"acc30",b:"bgp",    label:"",color:C.v30,dash:[],w:1},
-    {a:"acc30",b:"mpls",   label:"",color:C.v30,dash:[],w:1},
-    {a:"acc40",b:"ad",     label:"",color:C.v40,dash:[],w:1},
-    {a:"acc40",b:"veeam",  label:"",color:C.v40,dash:[],w:1},
-    {a:"acc40",b:"linux",  label:"",color:C.v40,dash:[],w:1},
-  ];
+      /* ── RIGHT PANEL: CCNP ENARSI (target study) ── */
+      enarsi:{x:xRC, y:ny(0.30),lbl:"CCNP\nENARSI",          c:P.enarsi,r:s*18,sh:"cloud"},
+      adv1:  {x:xRC, y:ny(0.50),lbl:"IS-IS\nEIGRP",          c:P.enarsi,r:s*12,sh:"hex"},
+      adv2:  {x:nx(0.84),y:ny(0.65),lbl:"VRF\nLite",         c:P.enarsi,r:s*10,sh:"rect"},
+      adv3:  {x:nx(0.94),y:ny(0.65),lbl:"IPv6\nDualStack",   c:P.enarsi,r:s*10,sh:"rect"},
+    };
 
-  /* ── Packet animation ── */
-  const packets=[];
-  const packetEdges=edges.filter(e=>e.w>=1);
-  function spawnPacket(){
-    const e=packetEdges[Math.floor(Math.random()*packetEdges.length)];
+    const edges=[
+      /* WAN → Core */
+      {a:"isp",b:"rtr1",c:P.wan,w:2,d:[6,3],lbl:"BGP"},
+      {a:"isp",b:"rtr2",c:P.wan,w:2,d:[6,3],lbl:""},
+      /* Core HA */
+      {a:"rtr1",b:"rtr2",c:P.core,w:2,d:[],lbl:"OSPF"},
+      /* Core → FW */
+      {a:"rtr1",b:"fw1",c:P.core,w:1.5,d:[]},
+      {a:"rtr2",b:"fw2",c:P.core,w:1.5,d:[]},
+      /* FW HA */
+      {a:"fw1",b:"fw2",c:P.fw,w:1.5,d:[4,3],lbl:"HA"},
+      /* FW → Dist */
+      {a:"fw1",b:"d1",c:P.fw,w:1.2,d:[]},
+      {a:"fw1",b:"d2",c:P.fw,w:1.2,d:[]},
+      {a:"fw2",b:"d2",c:P.fw,w:1.2,d:[]},
+      {a:"fw2",b:"d3",c:P.fw,w:1.2,d:[]},
+      /* Dist ring */
+      {a:"d1",b:"d2",c:P.dist,w:0.8,d:[3,3]},
+      {a:"d2",b:"d3",c:P.dist,w:0.8,d:[3,3]},
+      /* Dist → Access */
+      {a:"d1",b:"a1",c:P.acc,w:0.9,d:[]},
+      {a:"d1",b:"a2",c:P.fw,w:0.9,d:[]},
+      {a:"d2",b:"a3",c:P.dist,w:0.9,d:[]},
+      {a:"d2",b:"a4",c:P.core,w:0.9,d:[]},
+      {a:"d3",b:"a5",c:P.acc,w:0.9,d:[]},
+      {a:"d3",b:"a6",c:P.enarsi,w:0.9,d:[]},
+      /* Access → Endpoints */
+      {a:"a1",b:"e1a",c:P.acc,w:0.6,d:[]},{a:"a1",b:"e1b",c:P.acc,w:0.6,d:[]},
+      {a:"a1",b:"e1c",c:P.acc,w:0.6,d:[]},{a:"a1",b:"e1d",c:P.acc,w:0.6,d:[]},
+      {a:"a2",b:"e2a",c:P.fw,w:0.6,d:[]},{a:"a2",b:"e2b",c:P.fw,w:0.6,d:[]},
+      {a:"a2",b:"e2c",c:P.fw,w:0.6,d:[]},{a:"a2",b:"e2d",c:P.fw,w:0.6,d:[]},
+      {a:"a3",b:"e3a",c:P.dist,w:0.6,d:[]},{a:"a3",b:"e3b",c:P.dist,w:0.6,d:[]},
+      {a:"a3",b:"e3c",c:P.dist,w:0.6,d:[]},{a:"a3",b:"e3d",c:P.dist,w:0.6,d:[]},
+      {a:"a4",b:"e4a",c:P.core,w:0.6,d:[]},{a:"a4",b:"e4b",c:P.core,w:0.6,d:[]},
+      {a:"a4",b:"e4c",c:P.core,w:0.6,d:[]},{a:"a4",b:"e4d",c:P.core,w:0.6,d:[]},
+      {a:"a5",b:"e5a",c:P.acc,w:0.6,d:[]},{a:"a5",b:"e5b",c:P.acc,w:0.6,d:[]},
+      {a:"a5",b:"e5c",c:P.acc,w:0.6,d:[]},
+      {a:"a6",b:"e6a",c:P.enarsi,w:0.6,d:[]},{a:"a6",b:"e6b",c:P.enarsi,w:0.6,d:[]},
+      {a:"a6",b:"e6c",c:P.enarsi,w:0.6,d:[]},{a:"a6",b:"e6d",c:P.enarsi,w:0.6,d:[]},
+      /* ── MPLS/VRF tunnel: Core → Automation (LEFT) ── */
+      {a:"rtr1",b:"auto",c:P.auto,w:1.5,d:[8,4],lbl:"MPLS/VRF"},
+      {a:"auto",b:"py",c:P.auto,w:1,d:[4,3]},
+      {a:"py",b:"ans",c:P.auto,w:0.8,d:[]},
+      {a:"py",b:"nap",c:P.auto,w:0.8,d:[]},
+      /* ── Study path: Core → ENARSI (RIGHT) ── */
+      {a:"rtr2",b:"enarsi",c:P.enarsi,w:1.5,d:[8,4],lbl:"Target"},
+      {a:"enarsi",b:"adv1",c:P.enarsi,w:1,d:[4,3]},
+      {a:"adv1",b:"adv2",c:P.enarsi,w:0.8,d:[]},
+      {a:"adv1",b:"adv3",c:P.enarsi,w:0.8,d:[]},
+    ];
+
+    return{nodes,edges,W,H,M,s};
+  }
+
+  let layout=buildLayout(dim.W,dim.H,dim.M);
+  const pkts=[];
+
+  function spawnPkt(){
+    const{edges,nodes}=layout;
+    const e=edges[Math.floor(Math.random()*edges.length)];
     const na=nodes[e.a],nb=nodes[e.b];
     if(!na||!nb)return;
-    packets.push({x:na.x,y:na.y,tx:nb.x,ty:nb.y,color:e.color,t:0,speed:0.012+Math.random()*0.01});
+    pkts.push({x:na.x,y:na.y,tx:nb.x,ty:nb.y,c:e.c,t:0,sp:0.013+Math.random()*0.012});
   }
-  setInterval(spawnPacket,420);
+  setInterval(spawnPkt,300);
 
-  /* ── Draw helpers ── */
+  /* ── Drawing helpers ── */
   function drawNode(n){
+    const{x,y,r,c,sh,lbl}=n;
     ctx.save();
-    // glow
-    const grd=ctx.createRadialGradient(n.x,n.y,0,n.x,n.y,n.r*2.2);
-    grd.addColorStop(0,n.color+"33");
-    grd.addColorStop(1,"transparent");
-    ctx.fillStyle=grd;
-    ctx.beginPath();ctx.arc(n.x,n.y,n.r*2.2,0,Math.PI*2);ctx.fill();
+    // Glow
+    const g=ctx.createRadialGradient(x,y,0,x,y,r*2.8);
+    g.addColorStop(0,c+"22");g.addColorStop(1,"transparent");
+    ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,r*2.8,0,Math.PI*2);ctx.fill();
 
-    if(n.shape==="cloud"){
-      // cloud-ish blob
+    ctx.strokeStyle=c;ctx.lineWidth=1.5;ctx.fillStyle=c+"18";
+
+    if(sh==="cloud"){
+      // Rounded blob
       ctx.beginPath();
-      ctx.arc(n.x-8,n.y,n.r*0.7,0,Math.PI*2);
-      ctx.arc(n.x+8,n.y,n.r*0.7,0,Math.PI*2);
-      ctx.arc(n.x,n.y-8,n.r*0.65,0,Math.PI*2);
-      ctx.fillStyle=n.color+"22";
-      ctx.strokeStyle=n.color;
-      ctx.lineWidth=1.5;
+      ctx.arc(x-r*.35,y+r*.1,r*.62,0,Math.PI*2);
+      ctx.arc(x+r*.35,y+r*.1,r*.62,0,Math.PI*2);
+      ctx.arc(x,y-r*.2,r*.68,0,Math.PI*2);
+      ctx.arc(x-r*.65,y+r*.22,r*.46,0,Math.PI*2);
+      ctx.arc(x+r*.65,y+r*.22,r*.46,0,Math.PI*2);
+      ctx.fillStyle=c+"20";ctx.fill();
+      ctx.stroke();
+    } else if(sh==="hex"){
+      ctx.beginPath();
+      for(let i=0;i<6;i++){const a=Math.PI/6+i*Math.PI/3;i?ctx.lineTo(x+r*Math.cos(a),y+r*Math.sin(a)):ctx.moveTo(x+r*Math.cos(a),y+r*Math.sin(a));}
+      ctx.closePath();ctx.fill();ctx.stroke();
+      // Inner dot
+      ctx.beginPath();ctx.arc(x,y,r*.25,0,Math.PI*2);ctx.fillStyle=c;ctx.fill();
+    } else if(sh==="shield"){
+      ctx.beginPath();
+      ctx.moveTo(x,y-r);
+      ctx.lineTo(x+r*.85,y-r*.38);ctx.lineTo(x+r*.85,y+r*.28);
+      ctx.quadraticCurveTo(x+r*.48,y+r*1.05,x,y+r);
+      ctx.quadraticCurveTo(x-r*.48,y+r*1.05,x-r*.85,y+r*.28);
+      ctx.lineTo(x-r*.85,y-r*.38);ctx.closePath();
       ctx.fill();ctx.stroke();
-    } else if(n.shape==="router"){
-      // hexagon
-      ctx.beginPath();
-      for(let i=0;i<6;i++){
-        const a=Math.PI/6+i*Math.PI/3;
-        i===0?ctx.moveTo(n.x+n.r*Math.cos(a),n.y+n.r*Math.sin(a)):ctx.lineTo(n.x+n.r*Math.cos(a),n.y+n.r*Math.sin(a));
+    } else if(sh==="rect"){
+      const rw=r*2.1,rh=r*1.15;
+      ctx.beginPath();ctx.roundRect(x-rw/2,y-rh/2,rw,rh,3);
+      ctx.fill();ctx.stroke();
+      // Port LEDs
+      for(let i=0;i<3;i++){
+        ctx.beginPath();ctx.arc(x-rw*.24+i*rw*.24,y-rh*.2,1.4,0,Math.PI*2);
+        ctx.fillStyle=c+"99";ctx.fill();
       }
-      ctx.closePath();
-      ctx.fillStyle=n.color+"22";ctx.strokeStyle=n.color;ctx.lineWidth=2;
-      ctx.fill();ctx.stroke();
-      // inner dot
-      ctx.beginPath();ctx.arc(n.x,n.y,4,0,Math.PI*2);
-      ctx.fillStyle=n.color;ctx.fill();
-    } else if(n.shape==="switch"){
-      // rectangle
-      const rw=n.r*1.8,rh=n.r*1.1;
-      ctx.beginPath();ctx.roundRect(n.x-rw/2,n.y-rh/2,rw,rh,4);
-      ctx.fillStyle=n.color+"22";ctx.strokeStyle=n.color;ctx.lineWidth=1.5;
-      ctx.fill();ctx.stroke();
     } else {
-      // circle
-      ctx.beginPath();ctx.arc(n.x,n.y,n.r,0,Math.PI*2);
-      ctx.fillStyle=n.color+"22";ctx.strokeStyle=n.color;ctx.lineWidth=1.5;
-      ctx.fill();ctx.stroke();
+      ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();ctx.stroke();
     }
 
-    // label
-    const lines=n.label.split("\n");
-    ctx.fillStyle=n.color;
-    ctx.font=`700 ${isMobile?7.5:8.5}px 'Space Mono',monospace`;
+    // Label
+    const lines=(lbl||"").split("\\n");
+    ctx.fillStyle=c;
+    const fs=Math.max(6.5,r*0.72);
+    ctx.font=`700 ${fs}px 'Space Mono',monospace`;
     ctx.textAlign="center";
-    lines.forEach((l,i)=>{
-      ctx.fillText(l,n.x,n.y+n.r+12+(i*11));
-    });
+    const labelY=sh==="shield"?y+r*1.3:y+r+12;
+    lines.forEach((l,i)=>ctx.fillText(l,x,labelY+i*fs*1.3));
     ctx.restore();
   }
 
-  function drawEdge(e){
-    const na=nodes[e.a],nb=nodes[e.b];
+  function drawEdge(e,nodes){
+    const na=nodes[e.a],nb=nodes[e.b];if(!na||!nb)return;
     ctx.save();
-    ctx.beginPath();
-    ctx.moveTo(na.x,na.y);ctx.lineTo(nb.x,nb.y);
-    ctx.strokeStyle=e.color+"66";
-    ctx.lineWidth=e.w;
-    if(e.dash.length) ctx.setLineDash(e.dash);
-    ctx.stroke();
-    ctx.setLineDash([]);
-    if(e.label){
+    ctx.beginPath();ctx.moveTo(na.x,na.y);ctx.lineTo(nb.x,nb.y);
+    ctx.strokeStyle=e.c+"50";ctx.lineWidth=e.w||1;
+    if(e.d&&e.d.length)ctx.setLineDash(e.d);
+    ctx.stroke();ctx.setLineDash([]);
+    if(e.lbl){
       const mx=(na.x+nb.x)/2,my=(na.y+nb.y)/2;
-      ctx.font=`${isMobile?7:8}px 'Space Mono',monospace`;
-      ctx.fillStyle=e.color+"cc";
-      ctx.textAlign="center";
-      ctx.fillText(e.label,mx,my-4);
+      ctx.font="700 7.5px 'Space Mono',monospace";
+      ctx.fillStyle=e.c+"cc";ctx.textAlign="center";
+      ctx.fillText(e.lbl,mx,my-5);
     }
     ctx.restore();
   }
 
-  function drawPacket(p){
+  /* ── Layer bands ── */
+  function drawBands(W,H){
+    const bands=[
+      {y1:H*.00,y2:H*.14,lbl:"WAN / BGP UPLINK",          c:P.wan},
+      {y1:H*.14,y2:H*.28,lbl:"CORE — CCNP ENCOR (Redundant BGP · OSPF)",c:P.core},
+      {y1:H*.28,y2:H*.42,lbl:"SECURITY — FortiGate NSE4 (HA Cluster)",  c:P.fw},
+      {y1:H*.42,y2:H*.56,lbl:"DISTRIBUTION — L3 Switching · STP · HSRP",c:P.dist},
+      {y1:H*.56,y2:H*.70,lbl:"ACCESS — VLAN Segmentation · QoS · 802.1x",c:P.acc},
+      {y1:H*.70,y2:H*1.0,lbl:"ENDPOINT SERVICES",                        c:P.text},
+    ];
+    bands.forEach(b=>{
+      ctx.save();
+      ctx.fillStyle=b.c+"07";ctx.fillRect(0,b.y1,W,b.y2-b.y1);
+      ctx.strokeStyle=b.c+"12";ctx.lineWidth=0.5;
+      ctx.beginPath();ctx.moveTo(0,b.y1);ctx.lineTo(W,b.y1);ctx.stroke();
+      ctx.font=`700 7px 'Space Mono',monospace`;
+      ctx.fillStyle=b.c+"60";ctx.textAlign="left";
+      ctx.fillText(b.lbl,8,b.y1+10);
+      ctx.restore();
+    });
+
+    // Side panel labels
+    const sideFS=7.5;
     ctx.save();
-    ctx.beginPath();
-    ctx.arc(p.x,p.y,3.5,0,Math.PI*2);
-    ctx.fillStyle=p.color;
-    ctx.shadowColor=p.color;
-    ctx.shadowBlur=8;
-    ctx.fill();
+    // LEFT: Automation
+    ctx.font=`700 ${sideFS}px 'Space Mono',monospace`;
+    ctx.fillStyle=P.auto+"88";ctx.textAlign="center";
+    ctx.fillText("← AUTOMATION",W*.10,H*.07);
+    ctx.fillText("MPLS/VRF ACCESS",W*.10,H*.07+10);
+    // RIGHT: ENARSI
+    ctx.fillStyle=P.enarsi+"88";
+    ctx.fillText("CCNP ENARSI →",W*.90,H*.07);
+    ctx.fillText("STUDY TARGET",W*.90,H*.07+10);
     ctx.restore();
   }
 
-  /* ── Layer labels ── */
-  function drawLayers(){
-    const labels=[
-      {y:yCore-36, text:"CORE LAYER", color:C.core+"88"},
-      {y:yDist-36, text:"DISTRIBUTION LAYER (L3)", color:C.core+"66"},
-      {y:yAcc-36,  text:"ACCESS LAYER", color:C.text},
-    ];
-    ctx.font=`${isMobile?7:8}px 'Space Mono',monospace`;
-    ctx.textAlign="left";
-    labels.forEach(l=>{
-      ctx.fillStyle=l.color;
-      ctx.fillText(l.text, 8, l.y);
-      ctx.fillStyle=C.dim;
-      ctx.fillRect(8,l.y+3,W-16,0.5);
-    });
-    // WAN label
-    ctx.fillStyle=C.wan+"88";
-    ctx.fillText("WAN — MPLS/VRF AUTOMATION",8,yWAN-10);
-    ctx.fillStyle=C.dim;
-    ctx.fillRect(8,yWAN-6,W*0.38,0.5);
-  }
-
-  /* ── Main render loop ── */
   function render(){
+    const{nodes,edges,W,H,s}=layout;
     ctx.clearRect(0,0,W,H);
-    ctx.fillStyle=C.bg;
-    ctx.fillRect(0,0,W,H);
+    ctx.fillStyle=P.bg;ctx.fillRect(0,0,W,H);
+    drawBands(W,H);
+    edges.forEach(e=>drawEdge(e,nodes));
+    Object.values(nodes).forEach(n=>drawNode(n));
 
-    drawLayers();
-    edges.forEach(drawEdge);
-    Object.values(nodes).forEach(drawNode);
-
-    // update & draw packets
-    for(let i=packets.length-1;i>=0;i--){
-      const p=packets[i];
-      p.t+=p.speed;
-      if(p.t>=1){packets.splice(i,1);continue;}
-      const ease=p.t<0.5?2*p.t*p.t:1-Math.pow(-2*p.t+2,2)/2;
-      p.x=p.x+(p.tx-p.x)*p.speed/(1-p.t+0.001)*0.8;
-      p.y=p.y+(p.ty-p.y)*p.speed/(1-p.t+0.001)*0.8;
-      drawPacket(p);
+    for(let i=pkts.length-1;i>=0;i--){
+      const p=pkts[i];
+      p.t+=p.sp;
+      if(p.t>=1){pkts.splice(i,1);continue;}
+      const e=p.t<.5?2*p.t*p.t:1-Math.pow(-2*p.t+2,2)/2;
+      p.x=p.x+(p.tx-p.x)*p.sp/(1-p.t+.001)*.75;
+      p.y=p.y+(p.ty-p.y)*p.sp/(1-p.t+.001)*.75;
+      const fa=Math.sin(p.t*Math.PI);
+      ctx.save();
+      ctx.beginPath();ctx.arc(p.x,p.y,3,0,Math.PI*2);
+      ctx.fillStyle=p.c;ctx.shadowColor=p.c;ctx.shadowBlur=6*fa;ctx.fill();
+      ctx.shadowBlur=0;ctx.restore();
     }
     requestAnimationFrame(render);
   }
   render();
 
+  let rsz;
   window.addEventListener("resize",()=>{
-    canvas.width=wrap.offsetWidth;
-    canvas.height=H;
-    Object.assign(nodes,recalcPositions(wrap.offsetWidth));
+    clearTimeout(rsz);rsz=setTimeout(()=>{dim=setup();ctx=canvas.getContext("2d");layout=buildLayout(dim.W,dim.H,dim.M);},130);
   });
-  function recalcPositions(nW){
-    const nCX=nW/2;
-    nodes.wan.x=nCX*0.18; nodes.core.x=nCX; nodes.dist.x=nCX;
-    nodes.python.x=nCX*0.18; nodes.ansible.x=nCX*0.04; nodes.napalm.x=nCX*0.30; nodes.docker.x=nCX*0.04;
-    nodes.acc10.x=nCX*0.52; nodes.acc20.x=nCX*0.76; nodes.acc30.x=nCX*1.24; nodes.acc40.x=nCX*1.48;
-    nodes.grafana.x=nCX*0.44; nodes.zabbix.x=nCX*0.60; nodes.prtg.x=nCX*0.52;
-    nodes.forti.x=nCX*0.76; nodes.ips.x=nCX*0.68; nodes.vpn.x=nCX*0.84;
-    nodes.ospf.x=nCX*1.16; nodes.bgp.x=nCX*1.24; nodes.mpls.x=nCX*1.32;
-    nodes.ad.x=nCX*1.44; nodes.veeam.x=nCX*1.56; nodes.linux.x=nCX*1.68;
-  }
 })();
 </script>
 </body>
