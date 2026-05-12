@@ -278,7 +278,7 @@ section{padding:80px 0}
     <h1 class="hero-name">
       Ferhat <br><span class="line2">Türe</span>
     </h1>
-    <p class="hero-title" data-tr="Kıdemli Ağ & Güvenlik Mühendisi" data-en="Senior Network & Security Engineer">Kıdemli Ağ & Güvenlik Mühendisi</p>
+    <p class="hero-title" data-tr="Ağ & Güvenlik Mühendisi" data-en="Network & Security Engineer">Ağ & Güvenlik Mühendisi</p>
     <div class="hero-tags">
       <span class="tag">CCNA</span>
       <span class="tag">CCNP ENCOR</span>
@@ -345,7 +345,7 @@ section{padding:80px 0}
           <div class="t-dot" style="background:#28c840"></div>
           <span style="font-size:11px;color:var(--text3);margin-left:8px">ferhat@core:~$</span>
         </div>
-        <div class="terminal-body">
+        <div class="terminal-body" id="termBody">
           <div class="t-line"><span class="t-prompt">❯</span><span class="t-cmd">whoami</span></div>
           <div class="t-line"><span class="t-out" data-tr="ferhat.ali.ture — Ağ & Güvenlik Mühendisi" data-en="ferhat.ali.ture — Network & Security Engineer">ferhat.ali.ture — Ağ & Güvenlik Mühendisi</span></div>
           <div class="t-line" style="margin-top:8px"><span class="t-prompt">❯</span><span class="t-cmd">cat location.txt</span></div>
@@ -353,9 +353,10 @@ section{padding:80px 0}
           <div class="t-line" style="margin-top:8px"><span class="t-prompt">❯</span><span class="t-cmd">show version</span></div>
           <div class="t-line"><span class="t-out t-comment"># CCNA · CCNP ENCOR · NSE4</span></div>
           <div class="t-line"><span class="t-out t-comment"># RCNA · RSE</span></div>
-          <div class="t-line" style="margin-top:8px"><span class="t-prompt">❯</span><span class="t-cmd">ping career.next</span></div>
-          <div class="t-line"><span class="t-out" style="color:var(--accent2)" data-tr="CCNP ENARSI → CCIE Enterprise 🎯" data-en="CCNP ENARSI → CCIE Enterprise 🎯">CCNP ENARSI → CCIE Enterprise 🎯</span></div>
-          <div class="t-line" style="margin-top:8px"><span class="t-prompt" style="animation:blink 1s infinite">▊</span></div>
+          <div class="t-line" style="margin-top:8px"><span class="t-prompt">❯</span><span class="t-cmd">ping career.next -t</span></div>
+          <div class="t-line"><span class="t-out t-comment" data-tr="# Pinging career.next [CCNP-ENARSI] — Sürekli mod" data-en="# Pinging career.next [CCNP-ENARSI] — Continuous mode"># Pinging career.next [CCNP-ENARSI] — Sürekli mod</span></div>
+          <div id="pingLines"></div>
+          <div class="t-line" style="margin-top:4px"><span class="t-prompt" style="animation:blink 1s infinite">▊</span></div>
         </div>
       </div>
     </div>
@@ -370,7 +371,17 @@ section{padding:80px 0}
       <h2 class="section-title" data-tr="Stack &<br>Yetkinlikler." data-en="Stack &<br>Expertise.">Stack &<br>Yetkinlikler.</h2>
       <div class="section-line"></div>
     </div>
-    <div id="d3-graph" class="reveal"></div>
+    <div id="topo-wrap" class="reveal" style="position:relative;width:100%;background:var(--bg);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:32px">
+      <canvas id="topo-canvas" style="display:block;width:100%"></canvas>
+      <div id="topo-legend" style="position:absolute;bottom:10px;left:14px;display:flex;flex-wrap:wrap;gap:10px;font-size:9px;font-family:'Space Mono',monospace">
+        <span style="color:#58a6ff">■ CORE / Distribution</span>
+        <span style="color:#3fb950">■ VLAN 10 — Monitoring</span>
+        <span style="color:#d29922">■ VLAN 20 — Security</span>
+        <span style="color:#a371f7">■ VLAN 30 — Protocols</span>
+        <span style="color:#ffa657">■ VLAN 40 — Systems</span>
+        <span style="color:#f85149">■ WAN — MPLS/VRF Automation</span>
+      </div>
+    </div>
     <div class="skills-grid" style="margin-top:32px">
       <div class="skill-category reveal reveal-delay-1">
         <div class="skill-cat-title" data-tr="Ağ Protokolleri" data-en="Network Protocols">Ağ Protokolleri</div>
@@ -432,7 +443,7 @@ section{padding:80px 0}
           <span class="cert-badge badge-active" data-tr="✓ Aktif" data-en="✓ Active">✓ Aktif</span>
         </div>
         <div class="cert-meta">
-          <span>📅 23.02.2026</span>
+          <span data-tr="📅 23.02.2026" data-en="📅 23.02.2026">📅 23.02.2026</span>
           <span>Cisco Systems</span>
           <a href="https://www.credly.com/badges/2d2fd8a5-7311-418a-a014-730ae0625f63" target="_blank" style="color:var(--accent)">🔗 Credly</a>
         </div>
@@ -485,7 +496,7 @@ section{padding:80px 0}
           <span class="cert-badge badge-progress" data-tr="⏳ Hazırlık" data-en="⏳ In Progress">⏳ Hazırlık</span>
         </div>
         <div class="cert-meta">
-          <span data-tr="🎯 Hedef: 2026" data-en="🎯 Target: 2025">🎯 Hedef: 2026</span>
+          <span data-tr="🎯 Hedef: Ağustos 2026" data-en="🎯 Target: August 2026">🎯 Hedef: 2026</span>
           <span>Cisco Systems</span>
         </div>
       </div>
@@ -495,7 +506,7 @@ section{padding:80px 0}
           <span class="cert-badge badge-done" data-tr="✓ Tamamlandı" data-en="✓ Completed">✓ Tamamlandı</span>
         </div>
         <div class="cert-meta">
-          <span data-tr="📅 2026" data-en="📅 2026">📅 2026</span>
+          <span data-tr="📅 Mayıs 2026" data-en="📅 MAY 2026">📅 2026</span>
         </div>
       </div>
     </div>
@@ -575,7 +586,7 @@ section{padding:80px 0}
   <div class="container">
     <div class="section-header reveal" style="text-align:center">
       <div class="section-num" style="text-align:center">05 — <span data-tr="CV" data-en="RESUME">CV</span></div>
-      <h2 class="section-title" style="text-align:center" data-tr="CV İndir." data-en="Download Resume.">CV İndir.</h2>
+      <h2 class="section-title" style="text-align:center" data-tr="CV Görüntüle." data-en="View Resume.">CV İndir.</h2>
       <div class="section-line" style="margin:16px auto 0"></div>
     </div>
     <div class="cv-card reveal reveal-delay-1">
@@ -648,11 +659,11 @@ section{padding:80px 0}
       <div class="contact-form reveal reveal-delay-2">
         <div class="form-group">
           <label data-tr="İSİM" data-en="NAME">İSİM</label>
-          <input type="text" placeholder="John Doe">
+          <input type="text" placeholder="Name">
         </div>
         <div class="form-group">
           <label data-tr="E-POSTA" data-en="EMAIL">E-POSTA</label>
-          <input type="email" placeholder="john@example.com">
+          <input type="email" placeholder="name@example.com">
         </div>
         <div class="form-group">
           <label data-tr="MESAJ" data-en="MESSAGE">MESAJ</label>
@@ -666,8 +677,8 @@ section{padding:80px 0}
 
 <!-- FOOTER -->
 <footer>
-  <p data-tr="© 2025 Ferhat Ali Türe — <span>ferhatture.com</span> — Tüm hakları saklıdır." data-en="© 2025 Ferhat Ali Türe — <span>ferhatature.com</span> — All rights reserved.">
-    © 2025 Ferhat Ali Türe — <span>ferhatature.com</span> — Tüm hakları saklıdır.
+  <p data-tr="© 2026 Ferhat Ali Türe — <span><ferhatture class="com"></ferhatture></span> — Tüm hakları saklıdır." data-en="© 2026 Ferhat Ali Türe — <span>ferhatature.dev</span> — All rights reserved.">
+    © 2025 Ferhat Ali Türe — <span>ferhatture.com</span> — Tüm hakları saklıdır.
   </p>
 </footer>
 
@@ -823,51 +834,307 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape")closeModal()});
   animate();
 })();
 
-/* ─── D3 FORCE GRAPH ─── */
+/* ─── PING -T ANIMATION ─── */
 (function(){
-  const el=document.getElementById("d3-graph");
-  const w=el.offsetWidth||900,h=400;
-  const skills=[
-    {id:"OSPF",group:1},{id:"BGP",group:1},{id:"MPLS",group:1},{id:"VLAN",group:1},{id:"STP",group:1},{id:"QoS",group:1},
-    {id:"FortiGate",group:2},{id:"IPS",group:2},{id:"WAF",group:2},{id:"VPN",group:2},{id:"RADIUS",group:2},
-    {id:"Python",group:3},{id:"Docker",group:3},{id:"K8s",group:3},{id:"Netmiko",group:3},{id:"Ansible",group:3},
-    {id:"Grafana",group:4},{id:"Zabbix",group:4},{id:"PRTG",group:4},
-    {id:"Cisco",group:5},{id:"Ruijie",group:5},{id:"EVE-NG",group:5}
+  const container=document.getElementById("pingLines");
+  if(!container)return;
+  let seq=1,ttl=64;
+  const msgs=[
+    ()=>`Reply from CCNP-ENARSI: bytes=32 time=${28+Math.floor(Math.random()*12)}ms TTL=${ttl}`,
+    ()=>`Reply from CCNP-ENARSI: bytes=32 time=${25+Math.floor(Math.random()*15)}ms TTL=${ttl}`,
+    ()=>`Reply from CCNP-ENARSI: bytes=32 time=${30+Math.floor(Math.random()*10)}ms TTL=${ttl}`,
   ];
-  const links=[];
-  const groups={1:[],2:[],3:[],4:[],5:[]};
-  skills.forEach(s=>groups[s.group].push(s.id));
-  Object.values(groups).forEach(g=>{
-    for(let i=0;i<g.length-1;i++) links.push({source:g[i],target:g[i+1],value:1});
-    if(g.length>2) links.push({source:g[0],target:g[g.length-1],value:1});
+  const MAX=12;
+  function addLine(){
+    const div=document.createElement("div");
+    div.className="t-line";
+    div.innerHTML=`<span class="t-out" style="color:var(--accent2)">${msgs[seq%3]()}</span>`;
+    container.appendChild(div);
+    seq++;
+    const lines=container.querySelectorAll(".t-line");
+    if(lines.length>MAX) lines[0].remove();
+    container.parentElement.scrollTop=container.parentElement.scrollHeight;
+  }
+  setTimeout(addLine,600);
+  setTimeout(addLine,1400);
+  setTimeout(addLine,2200);
+  setInterval(addLine,2000);
+})();
+
+/* ─── NETWORK TOPOLOGY CANVAS ─── */
+(function(){
+  const wrap=document.getElementById("topo-wrap");
+  const canvas=document.getElementById("topo-canvas");
+  if(!canvas||!wrap)return;
+
+  const isMobile=window.innerWidth<768;
+  const H=isMobile?520:480;
+  canvas.width=wrap.offsetWidth;
+  canvas.height=H;
+  canvas.style.height=H+"px";
+
+  const ctx=canvas.getContext("2d");
+  const W=canvas.width;
+
+  /* ── Colour palette ── */
+  const C={
+    bg:"#080c10",
+    core:"#58a6ff",
+    v10:"#3fb950",   // Monitoring
+    v20:"#d29922",   // Security
+    v30:"#a371f7",   // Protocols
+    v40:"#ffa657",   // Systems
+    wan:"#f85149",   // WAN/MPLS
+    dim:"#21262d",
+    text:"#8b949e",
+    labelBg:"rgba(8,12,16,0.82)"
+  };
+
+  /* ── Layout constants ── */
+  const CX=W/2;
+  // Vertical bands  (% of H)
+  const yWAN   = H*0.10;
+  const yCore  = H*0.26;
+  const yDist  = H*0.43;
+  const yAcc   = H*0.62;
+  const yEnd   = H*0.82;
+
+  /* ── Node definitions ── */
+  const nodes={
+    // WAN cloud (left side)
+    wan:     {x:CX*0.18, y:yWAN,  label:"WAN\nMPLS/VRF", color:C.wan,  r:22, shape:"cloud"},
+    // Automation remote site
+    python:  {x:CX*0.18, y:yCore, label:"Python\nNetmiko", color:C.wan,  r:18},
+    ansible: {x:CX*0.04, y:yAcc,  label:"Ansible", color:C.wan,  r:16},
+    napalm:  {x:CX*0.30, y:yAcc,  label:"Napalm", color:C.wan,  r:16},
+    docker:  {x:CX*0.04, y:yEnd,  label:"Docker\nK8s",    color:C.wan,  r:16},
+
+    // Core router (centre)
+    core:    {x:CX,      y:yCore, label:"CORE-RTR\nCCNP ENCOR", color:C.core, r:26, shape:"router"},
+
+    // Distribution L3SW (centre)
+    dist:    {x:CX,      y:yDist, label:"DIST-SW\nL3 Switch",   color:C.core, r:22, shape:"switch"},
+
+    // Access switches
+    acc10:   {x:CX*0.52, y:yAcc,  label:"ACC-SW1\nVLAN 10", color:C.v10, r:18, shape:"switch"},
+    acc20:   {x:CX*0.76, y:yAcc,  label:"ACC-SW2\nVLAN 20", color:C.v20, r:18, shape:"switch"},
+    acc30:   {x:CX*1.24, y:yAcc,  label:"ACC-SW3\nVLAN 30", color:C.v30, r:18, shape:"switch"},
+    acc40:   {x:CX*1.48, y:yAcc,  label:"ACC-SW4\nVLAN 40", color:C.v40, r:18, shape:"switch"},
+
+    // End devices — VLAN 10 Monitoring
+    grafana: {x:CX*0.44, y:yEnd,  label:"Grafana",  color:C.v10, r:14},
+    zabbix:  {x:CX*0.60, y:yEnd,  label:"Zabbix",   color:C.v10, r:14},
+    prtg:    {x:CX*0.52, y:H*0.93,label:"PRTG",     color:C.v10, r:14},
+
+    // End devices — VLAN 20 Security
+    forti:   {x:CX*0.76, y:yEnd,  label:"FortiGate\nNSE4",  color:C.v20, r:16},
+    ips:     {x:CX*0.68, y:H*0.93,label:"IPS/WAF",  color:C.v20, r:14},
+    vpn:     {x:CX*0.84, y:H*0.93,label:"VPN",      color:C.v20, r:14},
+
+    // End devices — VLAN 30 Protocols
+    ospf:    {x:CX*1.16, y:yEnd,  label:"OSPF",     color:C.v30, r:14},
+    bgp:     {x:CX*1.24, y:H*0.93,label:"BGP",      color:C.v30, r:14},
+    mpls:    {x:CX*1.32, y:yEnd,  label:"MPLS\nVXLAN",color:C.v30,r:14},
+
+    // End devices — VLAN 40 Systems
+    ad:      {x:CX*1.44, y:yEnd,  label:"AD/DNS\nDHCP",    color:C.v40, r:14},
+    veeam:   {x:CX*1.56, y:H*0.93,label:"Veeam\nBackup",   color:C.v40, r:14},
+    linux:   {x:CX*1.68, y:yEnd,  label:"Linux\nEVE-NG",   color:C.v40, r:14},
+  };
+
+  /* ── Edge definitions ── */
+  const edges=[
+    // WAN uplink to core
+    {a:"wan",  b:"core",  label:"MPLS VRF", color:C.wan,  dash:[6,4], w:1.5},
+    {a:"python",b:"wan",  label:"",         color:C.wan,  dash:[4,4], w:1},
+    {a:"ansible",b:"python",label:"",       color:C.wan,  dash:[3,4], w:1},
+    {a:"napalm", b:"python",label:"",       color:C.wan,  dash:[3,4], w:1},
+    {a:"docker", b:"ansible",label:"",      color:C.wan,  dash:[3,4], w:1},
+
+    // Core ↔ Dist
+    {a:"core", b:"dist",  label:"Trunk",    color:C.core, dash:[], w:2.5},
+
+    // Dist ↔ Access (inter-VLAN routing)
+    {a:"dist", b:"acc10", label:"VLAN 10",  color:C.v10,  dash:[4,3], w:1.5},
+    {a:"dist", b:"acc20", label:"VLAN 20",  color:C.v20,  dash:[4,3], w:1.5},
+    {a:"dist", b:"acc30", label:"VLAN 30",  color:C.v30,  dash:[4,3], w:1.5},
+    {a:"dist", b:"acc40", label:"VLAN 40",  color:C.v40,  dash:[4,3], w:1.5},
+
+    // Access ↔ End devices
+    {a:"acc10",b:"grafana",label:"",color:C.v10,dash:[],w:1},
+    {a:"acc10",b:"zabbix", label:"",color:C.v10,dash:[],w:1},
+    {a:"acc10",b:"prtg",   label:"",color:C.v10,dash:[],w:1},
+    {a:"acc20",b:"forti",  label:"",color:C.v20,dash:[],w:1},
+    {a:"acc20",b:"ips",    label:"",color:C.v20,dash:[],w:1},
+    {a:"acc20",b:"vpn",    label:"",color:C.v20,dash:[],w:1},
+    {a:"acc30",b:"ospf",   label:"",color:C.v30,dash:[],w:1},
+    {a:"acc30",b:"bgp",    label:"",color:C.v30,dash:[],w:1},
+    {a:"acc30",b:"mpls",   label:"",color:C.v30,dash:[],w:1},
+    {a:"acc40",b:"ad",     label:"",color:C.v40,dash:[],w:1},
+    {a:"acc40",b:"veeam",  label:"",color:C.v40,dash:[],w:1},
+    {a:"acc40",b:"linux",  label:"",color:C.v40,dash:[],w:1},
+  ];
+
+  /* ── Packet animation ── */
+  const packets=[];
+  const packetEdges=edges.filter(e=>e.w>=1);
+  function spawnPacket(){
+    const e=packetEdges[Math.floor(Math.random()*packetEdges.length)];
+    const na=nodes[e.a],nb=nodes[e.b];
+    if(!na||!nb)return;
+    packets.push({x:na.x,y:na.y,tx:nb.x,ty:nb.y,color:e.color,t:0,speed:0.012+Math.random()*0.01});
+  }
+  setInterval(spawnPacket,420);
+
+  /* ── Draw helpers ── */
+  function drawNode(n){
+    ctx.save();
+    // glow
+    const grd=ctx.createRadialGradient(n.x,n.y,0,n.x,n.y,n.r*2.2);
+    grd.addColorStop(0,n.color+"33");
+    grd.addColorStop(1,"transparent");
+    ctx.fillStyle=grd;
+    ctx.beginPath();ctx.arc(n.x,n.y,n.r*2.2,0,Math.PI*2);ctx.fill();
+
+    if(n.shape==="cloud"){
+      // cloud-ish blob
+      ctx.beginPath();
+      ctx.arc(n.x-8,n.y,n.r*0.7,0,Math.PI*2);
+      ctx.arc(n.x+8,n.y,n.r*0.7,0,Math.PI*2);
+      ctx.arc(n.x,n.y-8,n.r*0.65,0,Math.PI*2);
+      ctx.fillStyle=n.color+"22";
+      ctx.strokeStyle=n.color;
+      ctx.lineWidth=1.5;
+      ctx.fill();ctx.stroke();
+    } else if(n.shape==="router"){
+      // hexagon
+      ctx.beginPath();
+      for(let i=0;i<6;i++){
+        const a=Math.PI/6+i*Math.PI/3;
+        i===0?ctx.moveTo(n.x+n.r*Math.cos(a),n.y+n.r*Math.sin(a)):ctx.lineTo(n.x+n.r*Math.cos(a),n.y+n.r*Math.sin(a));
+      }
+      ctx.closePath();
+      ctx.fillStyle=n.color+"22";ctx.strokeStyle=n.color;ctx.lineWidth=2;
+      ctx.fill();ctx.stroke();
+      // inner dot
+      ctx.beginPath();ctx.arc(n.x,n.y,4,0,Math.PI*2);
+      ctx.fillStyle=n.color;ctx.fill();
+    } else if(n.shape==="switch"){
+      // rectangle
+      const rw=n.r*1.8,rh=n.r*1.1;
+      ctx.beginPath();ctx.roundRect(n.x-rw/2,n.y-rh/2,rw,rh,4);
+      ctx.fillStyle=n.color+"22";ctx.strokeStyle=n.color;ctx.lineWidth=1.5;
+      ctx.fill();ctx.stroke();
+    } else {
+      // circle
+      ctx.beginPath();ctx.arc(n.x,n.y,n.r,0,Math.PI*2);
+      ctx.fillStyle=n.color+"22";ctx.strokeStyle=n.color;ctx.lineWidth=1.5;
+      ctx.fill();ctx.stroke();
+    }
+
+    // label
+    const lines=n.label.split("\n");
+    ctx.fillStyle=n.color;
+    ctx.font=`700 ${isMobile?7.5:8.5}px 'Space Mono',monospace`;
+    ctx.textAlign="center";
+    lines.forEach((l,i)=>{
+      ctx.fillText(l,n.x,n.y+n.r+12+(i*11));
+    });
+    ctx.restore();
+  }
+
+  function drawEdge(e){
+    const na=nodes[e.a],nb=nodes[e.b];
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(na.x,na.y);ctx.lineTo(nb.x,nb.y);
+    ctx.strokeStyle=e.color+"66";
+    ctx.lineWidth=e.w;
+    if(e.dash.length) ctx.setLineDash(e.dash);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    if(e.label){
+      const mx=(na.x+nb.x)/2,my=(na.y+nb.y)/2;
+      ctx.font=`${isMobile?7:8}px 'Space Mono',monospace`;
+      ctx.fillStyle=e.color+"cc";
+      ctx.textAlign="center";
+      ctx.fillText(e.label,mx,my-4);
+    }
+    ctx.restore();
+  }
+
+  function drawPacket(p){
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,3.5,0,Math.PI*2);
+    ctx.fillStyle=p.color;
+    ctx.shadowColor=p.color;
+    ctx.shadowBlur=8;
+    ctx.fill();
+    ctx.restore();
+  }
+
+  /* ── Layer labels ── */
+  function drawLayers(){
+    const labels=[
+      {y:yCore-36, text:"CORE LAYER", color:C.core+"88"},
+      {y:yDist-36, text:"DISTRIBUTION LAYER (L3)", color:C.core+"66"},
+      {y:yAcc-36,  text:"ACCESS LAYER", color:C.text},
+    ];
+    ctx.font=`${isMobile?7:8}px 'Space Mono',monospace`;
+    ctx.textAlign="left";
+    labels.forEach(l=>{
+      ctx.fillStyle=l.color;
+      ctx.fillText(l.text, 8, l.y);
+      ctx.fillStyle=C.dim;
+      ctx.fillRect(8,l.y+3,W-16,0.5);
+    });
+    // WAN label
+    ctx.fillStyle=C.wan+"88";
+    ctx.fillText("WAN — MPLS/VRF AUTOMATION",8,yWAN-10);
+    ctx.fillStyle=C.dim;
+    ctx.fillRect(8,yWAN-6,W*0.38,0.5);
+  }
+
+  /* ── Main render loop ── */
+  function render(){
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle=C.bg;
+    ctx.fillRect(0,0,W,H);
+
+    drawLayers();
+    edges.forEach(drawEdge);
+    Object.values(nodes).forEach(drawNode);
+
+    // update & draw packets
+    for(let i=packets.length-1;i>=0;i--){
+      const p=packets[i];
+      p.t+=p.speed;
+      if(p.t>=1){packets.splice(i,1);continue;}
+      const ease=p.t<0.5?2*p.t*p.t:1-Math.pow(-2*p.t+2,2)/2;
+      p.x=p.x+(p.tx-p.x)*p.speed/(1-p.t+0.001)*0.8;
+      p.y=p.y+(p.ty-p.y)*p.speed/(1-p.t+0.001)*0.8;
+      drawPacket(p);
+    }
+    requestAnimationFrame(render);
+  }
+  render();
+
+  window.addEventListener("resize",()=>{
+    canvas.width=wrap.offsetWidth;
+    canvas.height=H;
+    Object.assign(nodes,recalcPositions(wrap.offsetWidth));
   });
-  links.push({source:"OSPF",target:"FortiGate"},{source:"BGP",target:"VPN"},{source:"Python",target:"Netmiko"},{source:"Docker",target:"K8s"},{source:"Grafana",target:"Zabbix"});
-
-  const colors={1:"#58a6ff",2:"#f85149",3:"#3fb950",4:"#d29922",5:"#a371f7"};
-  const svg=d3.select("#d3-graph").append("svg").attr("width",w).attr("height",h);
-  const sim=d3.forceSimulation(skills)
-    .force("link",d3.forceLink(links).id(d=>d.id).distance(60))
-    .force("charge",d3.forceManyBody().strength(-120))
-    .force("center",d3.forceCenter(w/2,h/2))
-    .force("collision",d3.forceCollide(20));
-
-  const link=svg.append("g").selectAll("line").data(links).join("line")
-    .attr("stroke","#21262d").attr("stroke-width",1).attr("stroke-opacity",0.6);
-
-  const node=svg.append("g").selectAll("g").data(skills).join("g")
-    .call(d3.drag()
-      .on("start",(e,d)=>{if(!e.active)sim.alphaTarget(0.3).restart();d.fx=d.x;d.fy=d.y})
-      .on("drag",(e,d)=>{d.fx=e.x;d.fy=e.y})
-      .on("end",(e,d)=>{if(!e.active)sim.alphaTarget(0);d.fx=null;d.fy=null}));
-
-  node.append("circle").attr("r",22).attr("fill",d=>`${colors[d.group]}18`).attr("stroke",d=>colors[d.group]).attr("stroke-width",1);
-  node.append("text").text(d=>d.id).attr("text-anchor","middle").attr("dominant-baseline","middle")
-    .attr("font-size","9px").attr("font-family","Space Mono,monospace").attr("fill",d=>colors[d.group]);
-
-  sim.on("tick",()=>{
-    link.attr("x1",d=>d.source.x).attr("y1",d=>d.source.y).attr("x2",d=>d.target.x).attr("y2",d=>d.target.y);
-    node.attr("transform",d=>`translate(${Math.max(22,Math.min(w-22,d.x))},${Math.max(22,Math.min(h-22,d.y))})`);
-  });
+  function recalcPositions(nW){
+    const nCX=nW/2;
+    nodes.wan.x=nCX*0.18; nodes.core.x=nCX; nodes.dist.x=nCX;
+    nodes.python.x=nCX*0.18; nodes.ansible.x=nCX*0.04; nodes.napalm.x=nCX*0.30; nodes.docker.x=nCX*0.04;
+    nodes.acc10.x=nCX*0.52; nodes.acc20.x=nCX*0.76; nodes.acc30.x=nCX*1.24; nodes.acc40.x=nCX*1.48;
+    nodes.grafana.x=nCX*0.44; nodes.zabbix.x=nCX*0.60; nodes.prtg.x=nCX*0.52;
+    nodes.forti.x=nCX*0.76; nodes.ips.x=nCX*0.68; nodes.vpn.x=nCX*0.84;
+    nodes.ospf.x=nCX*1.16; nodes.bgp.x=nCX*1.24; nodes.mpls.x=nCX*1.32;
+    nodes.ad.x=nCX*1.44; nodes.veeam.x=nCX*1.56; nodes.linux.x=nCX*1.68;
+  }
 })();
 </script>
 </body>
